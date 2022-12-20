@@ -252,9 +252,9 @@ module.exports = meta => {
 
       const titleIcons = document.createElement("h2")
         .innerHTML = "Icons"
-        .style.color = "white"
-        .style.fontWeight = "bold"
-        .style.marginBottom = "10px";
+          .style.color = "white"
+            .style.fontWeight = "bold"
+              .style.marginBottom = "10px";
 
       panel.appendChild(titleIcons);
 
@@ -264,15 +264,15 @@ module.exports = meta => {
       const sci_l = document.createElement("span")
         .innerHTML = "Hide Channel Icons (#)"
           .style.marginLeft = "10px"
-        .style.color = "white"
-        .style.verticalAlign = "middle"
+            .style.color = "white"
+              .style.verticalAlign = "middle"
 
       const sci = document.createElement("input")
         .type = "checkbox"
-        .style.cursor = "pointer"
-        .style.height = "20px"
-        .style.width = "20px"
-        .style.verticalAlign = "middle";
+          .style.cursor = "pointer"
+            .style.height = "20px"
+              .style.width = "20px"
+                .style.verticalAlign = "middle";
 
       if (settings.hide_channel_icons == true) {
         sci.checked = true;
@@ -297,19 +297,19 @@ module.exports = meta => {
       showMessageIcons.classList.add("setting");
 
       const smi_l = document.createElement("span")
-      smi_l.innerHTML = "Hide Message Box Icons";
-      smi_l.style.marginLeft = "10px";
-      smi_l.style.color = "white"
-      smi_l.style.height = "20px";
-      smi_l.style.width = "20px";
-      smi_l.style.verticalAlign = "middle"
+        .innerHTML = "Hide Message Box Icons"
+          .style.marginLeft = "10px"
+            .style.color = "white"
+              .style.height = "20px"
+                .style.width = "20px"
+                  .style.verticalAlign = "middle"
 
-      const smi = document.createElement("input");
-      smi.type = "checkbox";
-      smi.style.cursor = "pointer";
-      smi.style.height = "20px";
-      smi.style.width = "20px";
-      smi.style.verticalAlign = "middle";
+      const smi = document.createElement("input")
+        .type = "checkbox"
+          .style.cursor = "pointer"
+            .style.height = "20px"
+              .style.width = "20px"
+                .style.verticalAlign = "middle"
 
       if (settings.hide_msg_icons == true) {
         smi.checked = true;
