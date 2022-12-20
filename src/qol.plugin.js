@@ -49,10 +49,16 @@ module.exports = meta => {
   const config = { attributes: true, childList: true, subtree: true };
 
   const callback = (mutationList, observer) => {
+    // catch deleted messages
     for (const mutation of mutationList) {
       mutation.removedNodes.forEach(removedNode => {
         console.log("NODE REMOVED: " + removedNode.innerHTML)
-        // catch deleted messages
+        // recreateMessage
+        const recreateMessage = document.createElement("div")
+          .innerHTML = removedNode.innerHTML
+            .setAttribute("class", "bd-qol-messagelogging-deleted")
+              .setAttribute("title", "(A deleted message)")
+        messages.appendChild(recreateMessage);
       })
     }
   };
