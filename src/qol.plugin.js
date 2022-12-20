@@ -340,7 +340,12 @@ module.exports = meta => {
       passwordP.appendChild(titlePs);
 
       const pswrd_input = document.createElement("input")
-      pswrd_input.type = "password"
+        .type = "password"
+        .style.border = "none"
+        .style.background = "none"
+        .style.borderBottom = "1.5 px solid white"
+        .style.textAlign = "left"
+        .style.fontSize = "15px"
       pswrd_input.addEventListener("keypress", (e) => {
         var char = String.fromCharCode(e.which)
         if (!isNumeric(char)) e.preventDefault();
