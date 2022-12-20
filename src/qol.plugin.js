@@ -6,6 +6,7 @@
  */
 
 module.exports = meta => {
+  var removed = false;
   const shade = document.createElement("div")
   const password_input = document.createElement("div")
 
@@ -13,13 +14,15 @@ module.exports = meta => {
   const defaults = {
     password: "",
     hide_msg_icons: false,
-    hide_channel_icons: false  
+    hide_channel_icons: false,
+    lock_time: 60,
   };
 
   const settings = {};
 
   const stored_data = BdApi.loadData(meta.name, "settings");
   Object.assign(settings, defaults, stored_data);
+  console.log(settings)
 
   return {
     start: () => {
@@ -27,7 +30,6 @@ module.exports = meta => {
       // Password/Lock 
       //BdApi.alert("Welcome!", "QOL Plugin activated.");
       var idleTime = 0;
-      var idleInterval = setInterval(timerIncrement, 60000);
       var inAnimationPhase = false;
 
       const mo = document.addEventListener("mousemove", resetIdle)
@@ -48,11 +50,18 @@ module.exports = meta => {
       }
 
       function timerIncrement() {
+        if (removed) return
         idleTime = idleTime + 1;
-        if (idleTime > 4) { // 5 minutes
-          window.location.reload();
+        //console.log(idleTime);
+        if (idleTime > settings["idle_time"]) {
+          shade.style.display = "block"
+          password_input.style.display = "block"
+          return;
         }
+        setTimeout(timerIncrement, 1000);
       }
+
+      timerIncrement()
 
       shade.style.position = "fixed";
       shade.style.top = "0%";
@@ -178,6 +187,7 @@ module.exports = meta => {
               document.querySelector("#bd-discordpswrd-qol-input").style.color = "white"
               document.querySelector("#bd-discordpswrd-qol-input").value = ""
               inAnimationPhase = false;
+              timerIncrement();
               return
             }, 1200)
           } else {
@@ -216,6 +226,7 @@ module.exports = meta => {
       BdApi.clearCSS("QOLPlugin");
       shade.remove()
       password_input.remove()
+      removed = true;
       //document.removeEventListener("keydown", detectKeyShow)
       //document.removeEventListener("keypress", kp)
       //document.removeEventListener("mousemove", mo)
@@ -325,9 +336,13 @@ module.exports = meta => {
       titlePs.style.marginBottom = "10px";
       titlePs.style.marginTop = "10px";
 
-      showMessageIcons.appendChild(titlePs);
+      const passwordP = document.createElement("div");
+      passwordP.appendChild(titlePs);
 
-      panel.append(showChannelIcons, showMessageIcons);
+      const pswrd_input = document.createElement("input")
+      pswrd_input.type = "password"
+
+      panel.append(showChannelIcons, showMessageIcons, passwordP);
 
       return panel;
     }
