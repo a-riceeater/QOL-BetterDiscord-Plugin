@@ -373,6 +373,8 @@ module.exports = meta => {
                 .style.width = "20px"
                   .style.verticalAlign = "middle"
 
+      passwordP.append(pswrd_input, pswrd_il, password_timeout, pswrdt_l)
+
       panel.append(showChannelIcons, showMessageIcons, passwordP);
 
       return panel;
