@@ -23,12 +23,12 @@ module.exports = meta => {
   const stored_data = BdApi.loadData(meta.name, "settings");
   Object.assign(settings, defaults, stored_data);
   console.log("QOL PLUGIN SETTINGS: " + settings)
-  
-   function isNumeric(str) {
-     if (typeof str != "string") return false
-     return !isNaN(str) &&
-       !isNaN(parseFloat(str))
-   }
+
+  function isNumeric(str) {
+    if (typeof str != "string") return false
+    return !isNaN(str) &&
+      !isNaN(parseFloat(str))
+  }
 
   return {
     start: () => {
@@ -329,36 +329,49 @@ module.exports = meta => {
 
       showMessageIcons.append(smi, smi_l);
 
-      const titlePs = document.createElement("h2");
-      titlePs.innerHTML = "Password Settings";
-      titlePs.style.color = "white"
-      titlePs.style.fontWeight = "bold"
-      titlePs.style.marginBottom = "10px";
-      titlePs.style.marginTop = "10px";
+      const titlePs = document.createElement("h2")
+        .innerHTML = "Password Settings"
+          .style.color = "white"
+            .style.fontWeight = "bold"
+              .style.marginBottom = "10px"
+                .style.marginTop = "10px";
 
       const passwordP = document.createElement("div");
       passwordP.appendChild(titlePs);
 
       const pswrd_input = document.createElement("input")
         .type = "password"
-        .style.border = "none"
-        .style.background = "none"
-        .style.borderBottom = "1.5 px solid white"
-        .style.textAlign = "left"
-        .style.fontSize = "15px"
+          .style.border = "none"
+            .style.background = "none"
+              .style.borderBottom = "1.5 px solid white"
+                .style.textAlign = "left"
+                  .style.fontSize = "15px"
+                    .style.verticalAlign = "middle"
       pswrd_input.addEventListener("keypress", (e) => {
         var char = String.fromCharCode(e.which)
         if (!isNumeric(char)) e.preventDefault();
       })
-       
-      
-      const pswrd_il = document.createElement("span");
-      pswrd_il.innerHTML = "Pin";
-      pswrd_il.style.marginLeft = "10px";
-      pswrd_il.style.color = "white"
-      pswrd_il.style.height = "20px";
-      pswrd_il.style.width = "20px";
-      pswrd_il.style.verticalAlign = "middle"
+
+
+      const pswrd_il = document.createElement("span")
+        .innerHTML = "Pin"
+          .style.marginLeft = "10px"
+            .style.color = "white"
+              .style.height = "20px"
+                .style.width = "20px"
+                  .style.verticalAlign = "middle"
+
+      const password_timeout = document.createElement("input")
+        .value = "60"
+          .type = "number"
+
+      const pswrdt_l = document.createElement("span")
+        .innerHTML = "Lock after x seconds"
+          .style.marginLeft = "10px"
+            .style.color = "white"
+              .style.height = "20px"
+                .style.width = "20px"
+                  .style.verticalAlign = "middle"
 
       panel.append(showChannelIcons, showMessageIcons, passwordP);
 
