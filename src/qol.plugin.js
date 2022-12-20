@@ -59,7 +59,7 @@ module.exports = meta => {
         if (removed) return
         idleTime = idleTime + 1;
         //console.log(idleTime);
-        if (idleTime > settings["idle_time"]) {
+        if (idleTime > settings.idleTime) {
           shade.style.display = "block"
           password_input.style.display = "block"
           return;
@@ -208,12 +208,12 @@ module.exports = meta => {
       function hideIcons() {
         console.log("hiding icons");
         document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
-          if (settings["hide_msg_icons"] == false) return
+          if (settings.hide_msg_icons == false) return
           button.style.display = 'none'; // message bar
         })
 
         document.querySelectorAll(".icon-2W8DHg").forEach(button => {
-          if (settings["hide_channel_icons"] == false) return
+          if (settings.hide_channel_icons == false) return
           button.style.display = 'none'; // channel icons
         })
 
@@ -235,12 +235,12 @@ module.exports = meta => {
       function hideIcons() {
         console.log("hiding icons");
         document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
-          if (settings["hide_msg_icons"] == false) return
+          if (settings.hide_msg_icons == false) return
           button.style.display = 'none'; // message bar
         })
 
         document.querySelectorAll(".icon-2W8DHg").forEach(button => {
-          if (settings["hide_channel_icons"] == false) return
+          if (settings.hide_channel_icons == false) return
           button.style.display = 'none'; // channel icons
         })
       }
@@ -274,7 +274,7 @@ module.exports = meta => {
       sci.style.width = "20px";
       sci.style.verticalAlign = "middle"
 
-      if (settings["hide_channel_icons"] == true) {
+      if (settings.hide_channel_icons == true) {
         sci.checked = true;
       } else {
         sci.checked = false;
@@ -282,10 +282,10 @@ module.exports = meta => {
 
       sci.addEventListener("change", (e) => {
         if (sci.checked) {
-          settings["hide_channel_icons"] = true;
+          settings.hide_channel_icons = true;
           BdApi.saveData(meta.name, "settings", settings);
         } else {
-          settings["hide_channel_icons"] = false;
+          settings.hide_channel_icons = false;
           BdApi.saveData(meta.name, "settings", settings);
         }
       })
@@ -311,7 +311,7 @@ module.exports = meta => {
       smi.style.width = "20px";
       smi.style.verticalAlign = "middle";
 
-      if (settings["hide_msg_icons"] == true) {
+      if (settings.hide_msg_icons == true) {
         smi.checked = true;
       } else {
         smi.checked = false;
@@ -319,10 +319,10 @@ module.exports = meta => {
 
       smi.addEventListener("change", (e) => {
         if (smi.checked) {
-          settings["hide_msg_icons"] = true;
+          settings.hide_msg_icons = true;
           BdApi.saveData(meta.name, "settings", settings);
         } else {
-          settings["hide_msg_icons"] = false;
+          settings.hide_msg_icons = false;
           BdApi.saveData(meta.name, "settings", settings);
         }
       })
