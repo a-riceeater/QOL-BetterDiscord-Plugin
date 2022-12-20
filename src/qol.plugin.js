@@ -13,9 +13,11 @@ module.exports = meta => {
 
   const defaults = {
     password: "",
-    hide_msg_icons: false,
-    hide_channel_icons: false,
-    lock_time: 60,
+    hideMsgIcons: false,
+    hideChannelIcons: false,
+    idleTime: 60,
+    logDeletedMessages: false,
+    logEditedMessages: false,
   };
 
   const settings = {};
@@ -30,7 +32,7 @@ module.exports = meta => {
       !isNaN(parseFloat(str))
   }
 
-  String.prototype.hashCode = function() {
+  String.prototype.hashCode = function () {
     var hash = 0,
       i, chr;
     if (this.length === 0) return hash;
@@ -42,8 +44,24 @@ module.exports = meta => {
     return hash;
   }
 
+  const messages = document.querySelector("messages") // get message box
+
+  const config = { attributes: true, childList: true, subtree: true };
+
+  const callback = (mutationList, observer) => {
+    for (const mutation of mutationList) {
+      mutation.removedNodes.forEach(removedNode => {
+        console.log("NODE REMOVED: " + removedNode.innerHTML)
+        // catch deleted messages
+      })
+    }
+  };
+
+  const observer = new MutationObserver(callback);
+
   return {
     start: () => {
+      observer.observe(messages, config);
 
       // Password/Lock 
       //BdApi.alert("Welcome!", "QOL Plugin activated.");
@@ -220,12 +238,12 @@ module.exports = meta => {
       function hideIcons() {
         console.log("hiding icons");
         document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
-          if (settings.hide_msg_icons == false) return
+          if (settings.hideMsgIcons == false) return
           button.style.display = 'none'; // message bar
         })
 
         document.querySelectorAll(".icon-2W8DHg").forEach(button => {
-          if (settings.hide_channel_icons == false) return
+          if (settings.hideChannelIcons == false) return
           button.style.display = 'none'; // channel icons
         })
 
@@ -237,6 +255,7 @@ module.exports = meta => {
     stop: () => {
       BdApi.clearCSS("QOLPlugin");
       shade.remove()
+      observer.disconnect();
       password_input.remove()
       removed = true;
       //document.removeEventListener("keydown", detectKeyShow)
@@ -244,15 +263,17 @@ module.exports = meta => {
       //document.removeEventListener("mousemove", mo)
     },
     onSwitch: () => {
+      observer.disconnect()
+      observer.observe(messages, config);
       function hideIcons() {
         console.log("hiding icons");
         document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
-          if (settings.hide_msg_icons == false) return
+          if (settings.hideMsgIcons == false) return
           button.style.display = 'none'; // message bar
         })
 
         document.querySelectorAll(".icon-2W8DHg").forEach(button => {
-          if (settings.hide_channel_icons == false) return
+          if (settings.hideChannelIcons == false) return
           button.style.display = 'none'; // channel icons
         })
       }
@@ -286,14 +307,14 @@ module.exports = meta => {
               .style.width = "20px"
                 .style.verticalAlign = "middle";
 
-      sci.checked = settings.hide_channel_icons;
+      sci.checked = settings.hideChannelIcons;
 
       sci.addEventListener("change", (e) => {
         if (sci.checked) {
-          settings.hide_channel_icons = true;
+          settings.hideChannelIcons = true;
           BdApi.saveData(meta.name, "settings", settings);
         } else {
-          settings.hide_channel_icons = false;
+          settings.hideChannelIcons = false;
           BdApi.saveData(meta.name, "settings", settings);
         }
       })
@@ -319,14 +340,14 @@ module.exports = meta => {
               .style.width = "20px"
                 .style.verticalAlign = "middle"
 
-      smi.checked = settings.hide_msg_icons;
+      smi.checked = settings.hideMsgIcons;
 
       smi.addEventListener("change", (e) => {
         if (smi.checked) {
-          settings.hide_msg_icons = true;
+          settings.hideMsgIcons = true;
           BdApi.saveData(meta.name, "settings", settings);
         } else {
-          settings.hide_msg_icons = false;
+          settings.hideMsgIcons = false;
           BdApi.saveData(meta.name, "settings", settings);
         }
       })
@@ -379,7 +400,28 @@ module.exports = meta => {
 
       passwordP.append(pswrd_input, pswrd_il, password_timeout, pswrdt_l)
 
-      panel.append(showChannelIcons, showMessageIcons, passwordP);
+      const messageLogging = document.createElement("div")
+      .style.fontWeight = "bold"
+        .style.marginBottom = "10px"
+          .style.marginTop = "10px"
+            .innerHTML = `
+      <h2>Message Logging</h2>
+      <br>
+      <input type="checkbox" id="bd-messagelogging-delete-checkbox" style="height: 20px; width: 20px; cursor: pointer;vertical-align: middle;"> <span style="color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;"> Show deleted messages</span>
+      <br>
+      <input type="checkbox" id="bd-messagelogging-edit-checkbox" style="height: 20px; width: 20px; cursor: pointer;vertical-align: middle;">
+      `
+
+      document.querySelector("#bd-messagelogging-delete-checkbox").addEventListener("click", (e) => {
+
+      })
+
+      document.querySelector("#bd-messagelogging-edit-checkbox").addEventListener("click", (e) => {
+
+      })
+
+    
+      panel.append(showChannelIcons, showMessageIcons, passwordP, messageLogging);
 
       return panel;
     }
