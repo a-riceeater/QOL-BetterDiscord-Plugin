@@ -274,11 +274,7 @@ module.exports = meta => {
               .style.width = "20px"
                 .style.verticalAlign = "middle";
 
-      if (settings.hide_channel_icons == true) {
-        sci.checked = true;
-      } else {
-        sci.checked = false;
-      }
+      sci.checked = settings.hide_channel_icons;
 
       sci.addEventListener("change", (e) => {
         if (sci.checked) {
@@ -311,8 +307,7 @@ module.exports = meta => {
               .style.width = "20px"
                 .style.verticalAlign = "middle"
 
-      if (settings.hide_msg_icons == true) smi.checked = true
-      else smi.checked = false
+      smi.checked = settings.hide_msg_icons;
 
       smi.addEventListener("change", (e) => {
         if (smi.checked) {
