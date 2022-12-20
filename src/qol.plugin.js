@@ -311,11 +311,8 @@ module.exports = meta => {
               .style.width = "20px"
                 .style.verticalAlign = "middle"
 
-      if (settings.hide_msg_icons == true) {
-        smi.checked = true;
-      } else {
-        smi.checked = false;
-      }
+      if (settings.hide_msg_icons == true) smi.checked = true
+      else smi.checked = false
 
       smi.addEventListener("change", (e) => {
         if (smi.checked) {
