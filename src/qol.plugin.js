@@ -250,11 +250,11 @@ module.exports = meta => {
       const panel = document.createElement("div");
       panel.id = "bd-discordpswrd-settings-panel";
 
-      const titleIcons = document.createElement("h2");
-      titleIcons.innerHTML = "Icons"
-      titleIcons.style.color = "white"
-      titleIcons.style.fontWeight = "bold"
-      titleIcons.style.marginBottom = "10px";
+      const titleIcons = document.createElement("h2")
+        .innerHTML = "Icons"
+        .style.color = "white"
+        .style.fontWeight = "bold"
+        .style.marginBottom = "10px";
 
       panel.appendChild(titleIcons);
 
@@ -262,17 +262,17 @@ module.exports = meta => {
       showChannelIcons.classList.add("setting");
 
       const sci_l = document.createElement("span")
-      sci_l.innerHTML = "Hide Channel Icons (#)";
-      sci_l.style.marginLeft = "10px";
-      sci_l.style.color = "white"
-      sci_l.style.verticalAlign = "middle"
+        .innerHTML = "Hide Channel Icons (#)"
+          .style.marginLeft = "10px"
+        .style.color = "white"
+        .style.verticalAlign = "middle"
 
-      const sci = document.createElement("input");
-      sci.type = "checkbox";
-      sci.style.cursor = "pointer";
-      sci.style.height = "20px";
-      sci.style.width = "20px";
-      sci.style.verticalAlign = "middle"
+      const sci = document.createElement("input")
+        .type = "checkbox"
+        .style.cursor = "pointer"
+        .style.height = "20px"
+        .style.width = "20px"
+        .style.verticalAlign = "middle";
 
       if (settings.hide_channel_icons == true) {
         sci.checked = true;
