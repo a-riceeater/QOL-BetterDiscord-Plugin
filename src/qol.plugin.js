@@ -341,9 +341,14 @@ module.exports = meta => {
 
       const pswrd_input = document.createElement("input")
       pswrd_input.type = "password"
+      pswrd_input.addEventListener("keypress", (e) => {
+        var char = String.fromCharCode(e.which)
+        if (!isNumeric(char)) e.preventDefault();
+      })
+       
       
       const pswrd_il = document.createElement("span");
-      pswrd_il.innerHTML = "Password";
+      pswrd_il.innerHTML = "Pin";
       pswrd_il.style.marginLeft = "10px";
       pswrd_il.style.color = "white"
       pswrd_il.style.height = "20px";
