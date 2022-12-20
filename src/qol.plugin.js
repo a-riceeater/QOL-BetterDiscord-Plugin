@@ -22,7 +22,13 @@ module.exports = meta => {
 
   const stored_data = BdApi.loadData(meta.name, "settings");
   Object.assign(settings, defaults, stored_data);
-  console.log(settings)
+  console.log("QOL PLUGIN SETTINGS: " + settings)
+  
+   function isNumeric(str) {
+     if (typeof str != "string") return false
+     return !isNaN(str) &&
+       !isNaN(parseFloat(str))
+   }
 
   return {
     start: () => {
@@ -168,12 +174,6 @@ module.exports = meta => {
           e.preventDefault();
         }
       })
-
-      function isNumeric(str) {
-        if (typeof str != "string") return false
-        return !isNaN(str) &&
-          !isNaN(parseFloat(str))
-      }
 
       function authPassword() {
         if (inputtedPassword.length == 4) {
