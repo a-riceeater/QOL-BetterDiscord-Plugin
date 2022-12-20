@@ -24,7 +24,7 @@ module.exports = meta => {
 
   const stored_data = BdApi.loadData(meta.name, "settings");
   Object.assign(settings, defaults, stored_data);
-  console.log("QOL PLUGIN SETTINGS: " + settings)
+  console.log(`QOL PLUGIN SETTINGS: ${settings}`)
 
   function isNumeric(str) {
     if (typeof str != "string") return false
@@ -32,20 +32,7 @@ module.exports = meta => {
       !isNaN(parseFloat(str))
   }
 
-  String.prototype.hashCode = function () {
-    var hash = 0,
-      i, chr;
-    if (this.length === 0) return hash;
-    for (i = 0; i < this.length; i++) {
-      chr = this.charCodeAt(i);
-      hash = ((hash << 5) - hash) + chr;
-      hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
-  }
-
-  const messages = document.querySelector("messages") // get message box
-
+  const messages = _("messages") // where messages are loaded; parent element
   const config = { attributes: true, childList: true, subtree: true };
 
   const callback = (mutationList, observer) => {
@@ -65,6 +52,25 @@ module.exports = meta => {
 
   const observer = new MutationObserver(callback);
 
+  function _(query) {
+    function _(query, all) {
+      if (all) {
+        if (query.startsWith("#") || query.startsWith(".")) {
+          return document.querySelectorAll(query);
+        }
+        return false;
+      }
+      else if (!all || all == null) {
+        if (query.startsWith("#") || query.startsWith(".")) {
+          return document.querySelector(query);
+        }
+        else {
+          return false;
+        }
+      }
+    }
+  }
+
   return {
     start: () => {
       observer.observe(messages, config);
@@ -82,7 +88,7 @@ module.exports = meta => {
           if (!isNumeric(String.fromCharCode(e.which))) return
           e.preventDefault();
           inputtedPassword += String.fromCharCode(e.which);
-          document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
+          _("#bd-discordpswrd-qol-input").value = inputtedPassword;
           authPassword();
         }
       });
@@ -187,7 +193,7 @@ module.exports = meta => {
           if (shade.style.display == "none") {
             password_input.style.display = "block"
             shade.style.display = "block"
-            document.querySelector("#bd-discordpswrd-qol-input").focus();
+            _("#bd-discordpswrd-qol-input").focus();
           } else {
             password_input.style.display = "none"
             shade.style.display = "none"
@@ -201,11 +207,11 @@ module.exports = meta => {
         if (inAnimationPhase == true) return;
         if (isNumeric(e.target.innerHTML) && !inAnimationPhase) {
           inputtedPassword += e.target.innerHTML;
-          document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
+          _("#bd-discordpswrd-qol-input").value = inputtedPassword;
           authPassword();
         } else if (e.target.getAttribute("data") == "bd-discordpswrd-qol-backspace" && inputtedPassword.length > 0 && !inAnimationPhase) {
           inputtedPassword = inputtedPassword.slice(0, -1)
-          document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
+          _("#bd-discordpswrd-qol-input").value = inputtedPassword;
         } else if (e.shiftKey && e.ctrlKey && e.keyCode == 73 && password_input.style.display == "block") {
           e.preventDefault();
         }
@@ -214,25 +220,25 @@ module.exports = meta => {
       function authPassword() {
         if (inputtedPassword.length == 4) {
           if (inputtedPassword == "1224") {
-            document.querySelector("#bd-discordpswrd-qol-input").style.color = "#0be3ca"
+            _("#bd-discordpswrd-qol-input").style.color = "#0be3ca"
             inputtedPassword = "";
             inAnimationPhase = true;
             setTimeout(function () {
               password_input.style.display = "none"
               shade.style.display = "none"
-              document.querySelector("#bd-discordpswrd-qol-input").style.color = "white"
-              document.querySelector("#bd-discordpswrd-qol-input").value = ""
+              _("#bd-discordpswrd-qol-input").style.color = "white"
+              _("#bd-discordpswrd-qol-input").value = ""
               inAnimationPhase = false;
               timerIncrement();
               return
             }, 1200)
           } else {
-            document.querySelector("#bd-discordpswrd-qol-input").style.color = "red"
+            _("#bd-discordpswrd-qol-input").style.color = "red"
             inputtedPassword = "";
             inAnimationPhase = true;
             setTimeout(function () {
-              document.querySelector("#bd-discordpswrd-qol-input").value = ""
-              document.querySelector("#bd-discordpswrd-qol-input").style.color = "white"
+              _("#bd-discordpswrd-qol-input").value = ""
+              _("#bd-discordpswrd-qol-input").style.color = "white"
               inAnimationPhase = false;
               return
             }, 500)
@@ -243,12 +249,12 @@ module.exports = meta => {
       // Hide icons
       function hideIcons() {
         console.log("hiding icons");
-        document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
+        _(".buttonWrapper-3YFQGJ", true).forEach(button => {
           if (settings.hideMsgIcons == false) return
           button.style.display = 'none'; // message bar
         })
 
-        document.querySelectorAll(".icon-2W8DHg").forEach(button => {
+        _(".icon-2W8DHg").forEach(button => {
           if (settings.hideChannelIcons == false) return
           button.style.display = 'none'; // channel icons
         })
@@ -273,12 +279,12 @@ module.exports = meta => {
       observer.observe(messages, config);
       function hideIcons() {
         console.log("hiding icons");
-        document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
+        _(".buttonWrapper-3YFQGJ", true).forEach(button => {
           if (settings.hideMsgIcons == false) return
           button.style.display = 'none'; // message bar
         })
 
-        document.querySelectorAll(".icon-2W8DHg").forEach(button => {
+        _(".icon-2W8DHg", true).forEach(button => {
           if (settings.hideChannelIcons == false) return
           button.style.display = 'none'; // channel icons
         })
@@ -418,11 +424,11 @@ module.exports = meta => {
       <input type="checkbox" id="bd-messagelogging-edit-checkbox" style="height: 20px; width: 20px; cursor: pointer;vertical-align: middle;">
       `
 
-      document.querySelector("#bd-messagelogging-delete-checkbox").addEventListener("click", (e) => {
+      _("#bd-messagelogging-delete-checkbox").addEventListener("click", (e) => {
 
       })
 
-      document.querySelector("#bd-messagelogging-edit-checkbox").addEventListener("click", (e) => {
+      _("#bd-messagelogging-edit-checkbox").addEventListener("click", (e) => {
 
       })
 
