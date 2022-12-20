@@ -341,6 +341,14 @@ module.exports = meta => {
 
       const pswrd_input = document.createElement("input")
       pswrd_input.type = "password"
+      
+      const pswrd_il = document.createElement("span");
+      pswrd_il.innerHTML = "Password";
+      pswrd_il.style.marginLeft = "10px";
+      pswrd_il.style.color = "white"
+      pswrd_il.style.height = "20px";
+      pswrd_il.style.width = "20px";
+      pswrd_il.style.verticalAlign = "middle"
 
       panel.append(showChannelIcons, showMessageIcons, passwordP);
 
