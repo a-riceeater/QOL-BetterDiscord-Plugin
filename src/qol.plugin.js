@@ -503,8 +503,10 @@ module.exports = meta => {
       password_timeout.addEventListener("keypress", (e) => {
         var char = String.fromCharCode(e.which)
         if (!isNumeric(char)) e.preventDefault();
-        settings.idleTime = password_timeout.value;
-        BdApi.saveData(meta.name, "settings", settings);
+        setTimeout(() => {
+          settings.idleTime = password_timeout.value;
+          BdApi.saveData(meta.name, "settings", settings);
+        }, 150)
       })
 
       const lineBreak1 = document.createElement("br")
@@ -528,36 +530,36 @@ module.exports = meta => {
       <h2 style="color: white">Message Logging</h2>
       <br>
       `
-
+ 
       const msgDeleteCheck = document.createElement("input")
       msgDeleteCheck.type = "checkbox"
       msgDeleteCheck.setAttribute("style","height: 20px; width: 20px; cursor: pointer; vertical-align: middle;")
-
+ 
       const msgDeleteCheck_label = document.createElement("span")
       msgDeleteCheck_label.innerHTML = "Show deleted messages"
       msgDeleteCheck_label.setAttribute("style", "color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;")
-
+ 
       const lineBreak2 = document.createElement("br")
-
+ 
       const msgEditCheck = document.createElement("input")
       msgEditCheck.type = "checkbox"
       msgEditCheck.setAttribute("style","height: 20px; width: 20px; cursor: pointer; vertical-align: middle;")
-
+ 
       const msgEditCheck_label = document.createElement("span")
       msgEditCheck_label.innerHTML = "Show edited messages"
       msgEditCheck_label.setAttribute("style", "color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;")
-
+ 
       messageLogging.append(msgDeleteCheck, msgDeleteCheck_label)
       messageLogging.append(lineBreak2, msgEditCheck, msgEditCheck_label)
       */
       panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP); // message logging
       /*
       msgDeleteCheck.addEventListener("change", (e) => {
-
+ 
       })
-
+ 
       msgEditCheck.addEventListener("click", (e) => {
-
+ 
       })*/
 
 
