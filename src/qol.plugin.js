@@ -18,6 +18,7 @@ module.exports = meta => {
     idleTime: 60,
     logDeletedMessages: false,
     logEditedMessages: false,
+    replaceHyphenChannel: false,
   };
 
   const settings = {};
@@ -263,7 +264,7 @@ module.exports = meta => {
     stop: () => {
       BdApi.clearCSS("QOLPlugin");
       shade.remove()
-      observer.disconnect();
+      // observer.disconnect();
       password_input.remove()
       removed = true;
       //document.removeEventListener("keydown", detectKeyShow)
@@ -276,9 +277,8 @@ module.exports = meta => {
       //observer.observe(document.querySelector(".scrollerInner-2PPAp2"), config);
       //}, 1000)
       function hideIcons() {
-        console.log("hiding icons");
+        if (settings.hideMsgIcons == false) return
         document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
-          if (settings.hideMsgIcons == false) return
           button.style.display = 'none'; // message bar
         })
 
@@ -288,6 +288,14 @@ module.exports = meta => {
         })
       }
       hideIcons();
+
+      function addSpaceInChannelNames() {
+        if (settings.replaceHyphenChannel == true) return
+        document.querySelectorAll("#channelName-3KPsGw").forEach(channel => {
+          channel.innerHTML = channel.innerHTMl.replaceAll("-", "")
+        })
+      }
+      addSpaceInChannelNames();
     },
     getSettingsPanel: () => {
       const panel = document.createElement("div");
@@ -353,16 +361,38 @@ module.exports = meta => {
       smi.checked = settings.hideMsgIcons;
 
       smi.addEventListener("change", (e) => {
-        if (smi.checked) {
-          settings.hideMsgIcons = true;
-          BdApi.saveData(meta.name, "settings", settings);
-        } else {
-          settings.hideMsgIcons = false;
-          BdApi.saveData(meta.name, "settings", settings);
-        }
+        settings.hideMsgIcons = smi.checked;
+        BdApi.saveData(meta.name, "settings", settings);
       })
 
       showMessageIcons.append(smi, smi_l);
+
+      const replaceHypenC = document.createElement("div")
+      replaceHypenC.classList.add("setting");
+
+      const asc = document.createElement("input")
+      asc.type = "checkbox"
+      asc.style.cursor = "pointer"
+      asc.style.height = "20px"
+      asc.style.width = "20px"
+      asc.style.verticalAlign = "middle"
+
+      asc.checked = settings.replaceHyphenChannel;
+
+      asc.addEventListener("change", (e) => {
+        settings.replaceHypenC = asc.checked;
+        BdApi.saveData(meta.name, "settings", settings);
+      })
+
+      const asc_l = document.createElement("span")
+      asc_l.innerHTML = `Replace "-" with "-"`
+      asc_l.style.marginLeft = "10px"
+      asc_l.style.color = "white"
+      asc_l.style.height = "20px"
+      asc_l.style.width = "20px"
+      asc_l.style.verticalAlign = "middle"
+
+      replaceHypenC.append(asc, asc_l);
 
       const titlePs = document.createElement("h2")
       titlePs.innerHTML = "Password Settings"
@@ -412,7 +442,7 @@ module.exports = meta => {
         }
         const password = settings.password;
         const passwordStrEle = document.querySelector("#bd-password-strength");
-        
+
         // Calculate strength of password
         if (password.length < 4) {
           passwordStrEle.innerHTML = "Very weak";
@@ -516,7 +546,7 @@ module.exports = meta => {
       messageLogging.append(msgDeleteCheck, msgDeleteCheck_label)
       messageLogging.append(lineBreak2, msgEditCheck, msgEditCheck_label)
       */
-      panel.append(showChannelIcons, showMessageIcons, passwordP); // message logging
+      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP); // message logging
       /*
       msgDeleteCheck.addEventListener("change", (e) => {
 
@@ -525,6 +555,8 @@ module.exports = meta => {
       msgEditCheck.addEventListener("click", (e) => {
 
       })*/
+
+
       return panel;
     }
   }
