@@ -395,6 +395,8 @@ module.exports = meta => {
       pswrd_input.addEventListener("keypress", (e) => {
         var char = String.fromCharCode(e.which)
         if (!isNumeric(char)) e.preventDefault();
+        settings.password = pswrd_input.value;
+        BdApi.saveData(meta.name, "settings", settings);
       })
 
 
@@ -416,6 +418,13 @@ module.exports = meta => {
       password_timeout.style.fontSize = "15px"
       password_timeout.style.verticalAlign = "middle"
       password_timeout.style.color = "aqua"
+
+      password_timeout.addEventListener("keypress", (e) => {
+        var char = String.fromCharCode(e.which)
+        if (!isNumeric(char)) e.preventDefault();
+        settings.password_timeout = password_timeout.value;
+        BdApi.saveData(meta.name, "settings", settings);
+      })
 
       const lineBreak1 = document.createElement("br")
 
@@ -459,9 +468,9 @@ module.exports = meta => {
 
       messageLogging.append(msgDeleteCheck, msgDeleteCheck_label)
       messageLogging.append(lineBreak2, msgEditCheck, msgEditCheck_label)
-      
-      panel.append(showChannelIcons, showMessageIcons, passwordP, messageLogging);
-
+      */
+      panel.append(showChannelIcons, showMessageIcons, passwordP); // message logging
+      /*
       msgDeleteCheck.addEventListener("change", (e) => {
 
       })
@@ -470,7 +479,7 @@ module.exports = meta => {
 
       })*/
 
-      
+
       return panel;
     }
   }
