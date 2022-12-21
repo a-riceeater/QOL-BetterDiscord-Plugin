@@ -24,7 +24,8 @@ module.exports = meta => {
 
   const stored_data = BdApi.loadData(meta.name, "settings");
   Object.assign(settings, defaults, stored_data);
-  console.log(`QOL PLUGIN SETTINGS: ${settings}`)
+  console.log("QOL PLUGIN SETTINGS:")
+  console.log(settings);
 
   function isNumeric(str) {
     if (typeof str != "string") return false
@@ -73,8 +74,7 @@ module.exports = meta => {
 
   return {
     start: () => {
-      observer.observe(messages, config);
-
+      //observer.observe(document.querySelector("#chatContent-3KubbW"), config);
       // Password/Lock 
       //BdApi.alert("Welcome!", "QOL Plugin activated.");
       var idleTime = 0;
@@ -249,12 +249,12 @@ module.exports = meta => {
       // Hide icons
       function hideIcons() {
         console.log("hiding icons");
-        _(".buttonWrapper-3YFQGJ", true).forEach(button => {
+        document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
           if (settings.hideMsgIcons == false) return
           button.style.display = 'none'; // message bar
         })
 
-        _(".icon-2W8DHg").forEach(button => {
+        document.querySelectorAll(".icon-2W8DHg").forEach(button => {
           if (settings.hideChannelIcons == false) return
           button.style.display = 'none'; // channel icons
         })
@@ -276,7 +276,7 @@ module.exports = meta => {
     },
     onSwitch: () => {
       observer.disconnect()
-      observer.observe(messages, config);
+      observer.observe(document.querySelector("#chatContent-3KubbW"), config);
       function hideIcons() {
         console.log("hiding icons");
         _(".buttonWrapper-3YFQGJ", true).forEach(button => {
@@ -296,10 +296,10 @@ module.exports = meta => {
       panel.id = "bd-discordpswrd-settings-panel";
 
       const titleIcons = document.createElement("h2")
-        .innerHTML = "Icons"
-          .style.color = "white"
-            .style.fontWeight = "bold"
-              .style.marginBottom = "10px";
+      titleIcons.innerHTML = "Icons"
+      titleIcons.style.color = "white"
+      titleIcons.style.fontWeight = "bold"
+      titleIcons.style.marginBottom = "10px";
 
       panel.appendChild(titleIcons);
 
@@ -307,17 +307,17 @@ module.exports = meta => {
       showChannelIcons.classList.add("setting");
 
       const sci_l = document.createElement("span")
-        .innerHTML = "Hide Channel Icons (#)"
-          .style.marginLeft = "10px"
-            .style.color = "white"
-              .style.verticalAlign = "middle"
+      sci_l.innerHTML = "Hide Channel Icons (#)"
+      sci_l.style.marginLeft = "10px"
+      sci_l.style.color = "white"
+      sci_l.style.verticalAlign = "middle"
 
       const sci = document.createElement("input")
-        .type = "checkbox"
-          .style.cursor = "pointer"
-            .style.height = "20px"
-              .style.width = "20px"
-                .style.verticalAlign = "middle";
+      sci.type = "checkbox"
+      sci.style.cursor = "pointer"
+      sci.style.height = "20px"
+      sci.style.width = "20px"
+      sci.style.verticalAlign = "middle";
 
       sci.checked = settings.hideChannelIcons;
 
@@ -338,19 +338,19 @@ module.exports = meta => {
       showMessageIcons.classList.add("setting");
 
       const smi_l = document.createElement("span")
-        .innerHTML = "Hide Message Box Icons"
-          .style.marginLeft = "10px"
-            .style.color = "white"
-              .style.height = "20px"
-                .style.width = "20px"
-                  .style.verticalAlign = "middle"
+      smi_l.innerHTML = "Hide Message Box Icons"
+      smi_l.style.marginLeft = "10px"
+      smi_l.style.color = "white"
+      smi_l.style.height = "20px"
+      smi_l.style.width = "20px"
+      smi_l.style.verticalAlign = "middle"
 
       const smi = document.createElement("input")
-        .type = "checkbox"
-          .style.cursor = "pointer"
-            .style.height = "20px"
-              .style.width = "20px"
-                .style.verticalAlign = "middle"
+      smi.type = "checkbox"
+      smi.style.cursor = "pointer"
+      smi.style.height = "20px"
+      smi.style.width = "20px"
+      smi.style.verticalAlign = "middle"
 
       smi.checked = settings.hideMsgIcons;
 
@@ -367,23 +367,24 @@ module.exports = meta => {
       showMessageIcons.append(smi, smi_l);
 
       const titlePs = document.createElement("h2")
-        .innerHTML = "Password Settings"
-          .style.color = "white"
-            .style.fontWeight = "bold"
-              .style.marginBottom = "10px"
-                .style.marginTop = "10px";
+      titlePs.innerHTML = "Password Settings"
+      titlePs.style.color = "white"
+      titlePs.style.fontWeight = "bold"
+      titlePs.style.marginBottom = "10px"
+      titlePs.style.marginTop = "10px";
 
       const passwordP = document.createElement("div");
       passwordP.appendChild(titlePs);
 
       const pswrd_input = document.createElement("input")
-        .type = "password"
-          .style.border = "none"
-            .style.background = "none"
-              .style.borderBottom = "1.5 px solid white"
-                .style.textAlign = "left"
-                  .style.fontSize = "15px"
-                    .style.verticalAlign = "middle"
+      pswrd_input.type = "password"
+      pswrd_input.style.border = "none"
+      pswrd_input.style.background = "none"
+      pswrd_input.style.borderBottom = "1.5px solid white"
+      pswrd_input.style.textAlign = "left"
+      pswrd_input.style.fontSize = "15px"
+      pswrd_input.style.verticalAlign = "middle"
+      pswrd_input.style.color = "aqua"
       pswrd_input.addEventListener("keypress", (e) => {
         var char = String.fromCharCode(e.which)
         if (!isNumeric(char)) e.preventDefault();
@@ -391,50 +392,76 @@ module.exports = meta => {
 
 
       const pswrd_il = document.createElement("span")
-        .innerHTML = "Pin"
-          .style.marginLeft = "10px"
-            .style.color = "white"
-              .style.height = "20px"
-                .style.width = "20px"
-                  .style.verticalAlign = "middle"
+      pswrd_il.innerHTML = "Pin"
+      pswrd_il.style.marginLeft = "10px"
+      pswrd_il.style.color = "white"
+      pswrd_il.style.height = "20px"
+      pswrd_il.style.width = "20px"
+      pswrd_il.style.verticalAlign = "middle"
 
       const password_timeout = document.createElement("input")
-        .value = "60"
-          .type = "number"
+      password_timeout.value = "60"
+      password_timeout.type = "number"
+      password_timeout.style.border = "none"
+      password_timeout.style.background = "none"
+      password_timeout.style.borderBottom = "1.5px solid white"
+      password_timeout.style.textAlign = "left"
+      password_timeout.style.fontSize = "15px"
+      password_timeout.style.verticalAlign = "middle"
+      password_timeout.style.color = "aqua"
+
+      const lineBreak1 = document.createElement("br")
 
       const pswrdt_l = document.createElement("span")
-        .innerHTML = "Lock after x seconds"
-          .style.marginLeft = "10px"
-            .style.color = "white"
-              .style.height = "20px"
-                .style.width = "20px"
-                  .style.verticalAlign = "middle"
+      pswrdt_l.innerHTML = "Lock after x seconds"
+      pswrdt_l.style.marginLeft = "10px"
+      pswrdt_l.style.color = "white"
+      pswrdt_l.style.height = "20px"
+      pswrdt_l.style.width = "20px"
+      pswrdt_l.style.verticalAlign = "middle"
 
-      passwordP.append(pswrd_input, pswrd_il, password_timeout, pswrdt_l)
+      passwordP.append(pswrd_input, pswrd_il)
+      passwordP.append(lineBreak1, password_timeout, pswrdt_l)
 
       const messageLogging = document.createElement("div")
-      .style.fontWeight = "bold"
-        .style.marginBottom = "10px"
-          .style.marginTop = "10px"
-            .innerHTML = `
-      <h2>Message Logging</h2>
+      messageLogging.style.fontWeight = "bold"
+      messageLogging.style.marginBottom = "10px"
+      messageLogging.style.marginTop = "10px"
+      messageLogging.innerHTML = `
+      <h2 style="color: white">Message Logging</h2>
       <br>
-      <input type="checkbox" id="bd-messagelogging-delete-checkbox" style="height: 20px; width: 20px; cursor: pointer;vertical-align: middle;"> <span style="color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;"> Show deleted messages</span>
-      <br>
-      <input type="checkbox" id="bd-messagelogging-edit-checkbox" style="height: 20px; width: 20px; cursor: pointer;vertical-align: middle;">
       `
 
-      _("#bd-messagelogging-delete-checkbox").addEventListener("click", (e) => {
+      const msgDeleteCheck = document.createElement("input")
+      msgDeleteCheck.type = "checkbox"
+      msgDeleteCheck.setAttribute("style","height: 20px; width: 20px; cursor: pointer; vertical-align: middle;")
 
-      })
+      const msgDeleteCheck_label = document.createElement("span")
+      msgDeleteCheck_label.innerHTML = "Show deleted messages"
+      msgDeleteCheck_label.setAttribute("style", "color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;")
 
-      _("#bd-messagelogging-edit-checkbox").addEventListener("click", (e) => {
+      const lineBreak2 = document.createElement("br")
 
-      })
+      const msgEditCheck = document.createElement("input")
+      msgEditCheck.type = "checkbox"
+      msgEditCheck.setAttribute("style","height: 20px; width: 20px; cursor: pointer; vertical-align: middle;")
 
-    
+      const msgEditCheck_label = document.createElement("span")
+      msgEditCheck_label.innerHTML = "Show edited messages"
+      msgEditCheck_label.setAttribute("style", "color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;")
+
+      messageLogging.append(msgDeleteCheck, msgDeleteCheck_label)
+      messageLogging.append(lineBreak2, msgEditCheck, msgEditCheck_label)
+      
       panel.append(showChannelIcons, showMessageIcons, passwordP, messageLogging);
 
+      msgDeleteCheck.addEventListener("change", (e) => {
+
+      })
+
+      msgEditCheck.addEventListener("click", (e) => {
+
+      })
       return panel;
     }
   }
