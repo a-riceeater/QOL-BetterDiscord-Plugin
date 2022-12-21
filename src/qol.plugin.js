@@ -196,9 +196,6 @@ module.exports = meta => {
             shade.style.display = "block"
             document.querySelector("#bd-discordpswrd-qol-input").style.color = "white"
             document.querySelector("#bd-discordpswrd-qol-input").focus();
-          } else {
-            password_input.style.display = "none"
-            shade.style.display = "none"
           }
         }
       })
