@@ -6,5 +6,4 @@
 <ul>
     <li>Icon Hiding (channel #'s, message bar icons, etc)</li>
     <li>Lock screen and auto-lock</li>
-    <li>Deleted message logging</li>
 </ul>
