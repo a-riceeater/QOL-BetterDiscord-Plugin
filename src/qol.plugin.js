@@ -527,7 +527,7 @@ module.exports = meta => {
 
       passwordP.append(pswrd_input, pswrd_il)
       passwordP.append(lineBreak1, password_timeout, pswrdt_l)
-      /*
+      
       const messageLogging = document.createElement("div")
       messageLogging.style.fontWeight = "bold"
       messageLogging.style.marginBottom = "10px"
@@ -557,16 +557,16 @@ module.exports = meta => {
  
       messageLogging.append(msgDeleteCheck, msgDeleteCheck_label)
       messageLogging.append(lineBreak2, msgEditCheck, msgEditCheck_label)
-      */
+      
       panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP); // message logging
-      /*
+      
       msgDeleteCheck.addEventListener("change", (e) => {
  
       })
  
       msgEditCheck.addEventListener("click", (e) => {
  
-      })*/
+      })
 
 
       return panel;
