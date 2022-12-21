@@ -32,7 +32,7 @@ module.exports = meta => {
       !isNaN(parseFloat(str))
   }
 
-  const messages = _("messages") // where messages are loaded; parent element
+  const messages = _(".chatContent-3KubbW") // where messages are loaded; parent element
   const config = { attributes: true, childList: true, subtree: true };
 
   const callback = (mutationList, observer) => {
