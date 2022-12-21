@@ -195,7 +195,7 @@ module.exports = meta => {
 
       var inputtedPassword = "";
       const detectNumPress = document.addEventListener("click", (e) => {
-        if (!password_input.style.display == "none") return;
+        if (password_input.style.display == "none") return;
         if (inAnimationPhase == true) return;
         if (isNumeric(e.target.innerHTML) && !inAnimationPhase) {
           inputtedPassword += e.target.innerHTML;
