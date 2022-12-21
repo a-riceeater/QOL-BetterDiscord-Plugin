@@ -103,7 +103,7 @@ module.exports = meta => {
         //setTimeout(timerIncrement, 1000);
       }
 
-      //timerIncrement()
+      timerIncrement()
 
       shade.style.position = "fixed";
       shade.style.top = "0%";
