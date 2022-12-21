@@ -1,1 +1,46 @@
-
+module.exports=e=>{var t=!1;let s=document.createElement("div"),n=document.createElement("div"),l={password:"",hideMsgIcons:!1,hideChannelIcons:!1,idleTime:60,logDeletedMessages:!1,logEditedMessages:!1},i={},d=BdApi.loadData(e.name,"settings");function r(e){return"string"==typeof e&&!isNaN(e)&&!isNaN(parseFloat(e))}Object.assign(i,l,d),console.log("QOL PLUGIN SETTINGS:"),console.log(i);let o=y(".chatContent-3KubbW"),a={attributes:!0,childList:!0,subtree:!0},c=(e,t)=>{for(let s of e)s.removedNodes.forEach(e=>{console.log("NODE REMOVED: "+e.innerHTML);let t=document.createElement("div").innerHTML=e.innerHTML.setAttribute("class","bd-qol-messagelogging-deleted").setAttribute("title","(A deleted message)");o.appendChild(t)})},p=new MutationObserver(c);function y(e){function t(e,t){return t?!!(e.startsWith("#")||e.startsWith("."))&&document.querySelectorAll(e):t&&null!=t?void 0:!!(e.startsWith("#")||e.startsWith("."))&&document.querySelector(e)}}return{start(){var e=0,l=!1;function d(){if(!t){if((e+=1)>i.idleTime){s.style.display="block",n.style.display="block";return}setTimeout(d,1e3)}}document.addEventListener("mousemove",function t(){e=0}),document.addEventListener("keypress",t=>{e=0,"block"==n.style.display&&(t||(t=event),r(String.fromCharCode(t.which))&&(t.preventDefault(),o+=String.fromCharCode(t.which),y("#bd-discordpswrd-qol-input").value=o,a()))}),d(),s.style.position="fixed",s.style.top="0%",s.style.left="0%",s.style.background="black",s.style.width="100%",s.style.height="100%",s.style.opacity="0.95",s.style.zIndex="9998",s.style.display="none",s.id="bd-discordpswrd-qol-shade",document.body.append(s),n.style.position="fixed",n.style.top="55%",n.style.left="50%",n.style.background="transparent",n.style.width="50%",n.style.height="50%",n.style.zIndex="9999",n.style.display="none",n.style.opacity="1",n.style.color="white",n.style.textAlign="center",n.style.transform="translate(-50%, -50%)",n.id="bd-discordpswrd-qol-pl",n.innerHTML=`
+      <h1 style="text-decoration: underline;">Enter Discord Password</h1>
+      <br><br>
+      <input type="password" id="bd-discordpswrd-qol-input" disabled>
+      <br><br>
+      <span align="center" class="bd-discordpswrd-qol-num" style="margin-left: 50px;">1</span> <span align="center" class="bd-discordpswrd-qol-num">2</span> <span align="center" class="bd-discordpswrd-qol-num">3</span>
+      <br><br>
+      <span align="center" class="bd-discordpswrd-qol-num" style="margin-left: 50px;">4</span> <span align="center" class="bd-discordpswrd-qol-num">5</span> <span align="center" class="bd-discordpswrd-qol-num">6</span>
+      <br><br>
+      <span align="center" class="bd-discordpswrd-qol-num" style="margin-left: 50px;">7</span> <span align="center" class="bd-discordpswrd-qol-num">8</span> <span align="center" class="bd-discordpswrd-qol-num">9</span>
+      <br><br>
+      <span align="center" id="bd-discordpswrd-qol-backspace"><span style="font-size: 55px; vertical-align: middle;" data="bd-discordpswrd-qol-backspace">&#x2190;</span> <span style="font-size: 20px; vertical-align: middle;" data="bd-discordpswrd-qol-backspace">Backspace</span></span>
+      `,document.body.append(n),BdApi.injectCSS("QOLPlugin",`
+    .bd-discordpswrd-qol-num:hover {
+      color: #0be3ca;
+    }
+    #bd-discordpswrd-qol-input {
+      border: none; 
+      border-bottom: 1.5px solid white; 
+      width: 200px; color: white; 
+      font-size: 45px; 
+      text-align: center; 
+      background: transparent;
+      transition: .5s;
+    }
+    .bd-discordpswrd-qol-num {
+      font-size: 30px; 
+      margin-right: 50px; 
+      margin-bottom: 50px; 
+      cursor: pointer; 
+      text-align: center;
+      width: 20px;
+      transition: 1.5s;
+    }
+    #bd-discordpswrd-qol-backspace {
+      transition: 1.5s;
+      cursor: pointer;
+      color: white;
+    }
+    #bd-discordpswrd-qol-backspace:hover {
+      color: #0be3ca;
+    }
+  `),document.addEventListener("keydown",e=>{e.ctrlKey&&76==e.keyCode&&("none"==s.style.display?(n.style.display="block",s.style.display="block",y("#bd-discordpswrd-qol-input").focus()):(n.style.display="none",s.style.display="none"))});var o="";function a(){4==o.length&&("1224"==o?(y("#bd-discordpswrd-qol-input").style.color="#0be3ca",o="",l=!0,setTimeout(function(){n.style.display="none",s.style.display="none",y("#bd-discordpswrd-qol-input").style.color="white",y("#bd-discordpswrd-qol-input").value="",l=!1,d()},1200)):(y("#bd-discordpswrd-qol-input").style.color="red",o="",l=!0,setTimeout(function(){y("#bd-discordpswrd-qol-input").value="",y("#bd-discordpswrd-qol-input").style.color="white",l=!1},500)))}document.addEventListener("click",e=>{"none"!=!n.style.display&&!0!=l&&(r(e.target.innerHTML)&&!l?(o+=e.target.innerHTML,y("#bd-discordpswrd-qol-input").value=o,a()):"bd-discordpswrd-qol-backspace"==e.target.getAttribute("data")&&o.length>0&&!l?(o=o.slice(0,-1),y("#bd-discordpswrd-qol-input").value=o):e.shiftKey&&e.ctrlKey&&73==e.keyCode&&"block"==n.style.display&&e.preventDefault())}),console.log("hiding icons"),document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(e=>{!1!=i.hideMsgIcons&&(e.style.display="none")}),document.querySelectorAll(".icon-2W8DHg").forEach(e=>{!1!=i.hideChannelIcons&&(e.style.display="none")})},stop(){BdApi.clearCSS("QOLPlugin"),s.remove(),p.disconnect(),n.remove(),t=!0},onSwitch(){p.disconnect(),p.observe(document.querySelector("#chatContent-3KubbW"),a),console.log("hiding icons"),y(".buttonWrapper-3YFQGJ",!0).forEach(e=>{!1!=i.hideMsgIcons&&(e.style.display="none")}),y(".icon-2W8DHg",!0).forEach(e=>{!1!=i.hideChannelIcons&&(e.style.display="none")})},getSettingsPanel(){let t=document.createElement("div");t.id="bd-discordpswrd-settings-panel";let s=document.createElement("h2");s.innerHTML="Icons",s.style.color="white",s.style.fontWeight="bold",s.style.marginBottom="10px",t.appendChild(s);let n=document.createElement("div");n.classList.add("setting");let l=document.createElement("span");l.innerHTML="Hide Channel Icons (#)",l.style.marginLeft="10px",l.style.color="white",l.style.verticalAlign="middle";let d=document.createElement("input");d.type="checkbox",d.style.cursor="pointer",d.style.height="20px",d.style.width="20px",d.style.verticalAlign="middle",d.checked=i.hideChannelIcons,d.addEventListener("change",t=>{d.checked?(i.hideChannelIcons=!0,BdApi.saveData(e.name,"settings",i)):(i.hideChannelIcons=!1,BdApi.saveData(e.name,"settings",i))}),n.append(d,l);let o=document.createElement("div");o.classList.add("setting");let a=document.createElement("span");a.innerHTML="Hide Message Box Icons",a.style.marginLeft="10px",a.style.color="white",a.style.height="20px",a.style.width="20px",a.style.verticalAlign="middle";let c=document.createElement("input");c.type="checkbox",c.style.cursor="pointer",c.style.height="20px",c.style.width="20px",c.style.verticalAlign="middle",c.checked=i.hideMsgIcons,c.addEventListener("change",t=>{c.checked?(i.hideMsgIcons=!0,BdApi.saveData(e.name,"settings",i)):(i.hideMsgIcons=!1,BdApi.saveData(e.name,"settings",i))}),o.append(c,a);let p=document.createElement("h2");p.innerHTML="Password Settings",p.style.color="white",p.style.fontWeight="bold",p.style.marginBottom="10px",p.style.marginTop="10px";let y=document.createElement("div");y.appendChild(p);let h=document.createElement("input");h.type="password",h.style.border="none",h.style.background="none",h.style.borderBottom="1.5px solid white",h.style.textAlign="left",h.style.fontSize="15px",h.style.verticalAlign="middle",h.style.color="aqua",h.addEventListener("keypress",e=>{r(String.fromCharCode(e.which))||e.preventDefault()});let g=document.createElement("span");g.innerHTML="Pin",g.style.marginLeft="10px",g.style.color="white",g.style.height="20px",g.style.width="20px",g.style.verticalAlign="middle";let b=document.createElement("input");b.value="60",b.type="number",b.style.border="none",b.style.background="none",b.style.borderBottom="1.5px solid white",b.style.textAlign="left",b.style.fontSize="15px",b.style.verticalAlign="middle",b.style.color="aqua";let m=document.createElement("br"),u=document.createElement("span");u.innerHTML="Lock after x seconds",u.style.marginLeft="10px",u.style.color="white",u.style.height="20px",u.style.width="20px",u.style.verticalAlign="middle",y.append(h,g),y.append(m,b,u);let $=document.createElement("div");$.style.fontWeight="bold",$.style.marginBottom="10px",$.style.marginTop="10px",$.innerHTML=`
+      <h2 style="color: white">Message Logging</h2>
+      <br>
+      `;let w=document.createElement("input");w.type="checkbox",w.setAttribute("style","height: 20px; width: 20px; cursor: pointer; vertical-align: middle;");let x=document.createElement("span");x.innerHTML="Show deleted messages",x.setAttribute("style","color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;");let v=document.createElement("br"),f=document.createElement("input");f.type="checkbox",f.setAttribute("style","height: 20px; width: 20px; cursor: pointer; vertical-align: middle;");let E=document.createElement("span");return E.innerHTML="Show edited messages",E.setAttribute("style","color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;"),$.append(w,x),$.append(v,f,E),t.append(n,o,y,$),w.addEventListener("change",e=>{}),f.addEventListener("click",e=>{}),t}}};
