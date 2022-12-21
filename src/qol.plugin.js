@@ -69,7 +69,7 @@ module.exports = meta => {
       const mo = document.addEventListener("mousemove", resetIdle)
       const kp = document.addEventListener("keypress", (e) => {
         idleTime = 0;
-        /*if (password_input.style.display == "block") {
+        if (password_input.style.display == "block") {
           if (!e) e = event;
           if (!isNumeric(String.fromCharCode(e.which))) {
             e.preventDefault();
@@ -80,7 +80,7 @@ module.exports = meta => {
           inputtedPassword += String.fromCharCode(e.which);
           document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
           authPassword();
-        }*/
+        }
       });
 
       function resetIdle() {
