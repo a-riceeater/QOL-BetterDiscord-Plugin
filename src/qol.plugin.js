@@ -33,7 +33,8 @@ module.exports = meta => {
       !isNaN(parseFloat(str))
   }
 
-  const messages = _(".chatContent-3KubbW") // where messages are loaded; parent element
+  const messages = document.querySelector(".chatContent-3KubbW") // where messages are loaded; parent element
+  /*
   const config = { attributes: true, childList: true, subtree: true };
 
   const callback = (mutationList, observer) => {
@@ -57,25 +58,7 @@ module.exports = meta => {
   };
 
   const observer = new MutationObserver(callback);
-
-  function _(query) {
-    function _(query, all) {
-      if (all) {
-        if (query.startsWith("#") || query.startsWith(".")) {
-          return document.querySelectorAll(query);
-        }
-        return false;
-      }
-      else if (!all || all == null) {
-        if (query.startsWith("#") || query.startsWith(".")) {
-          return document.querySelector(query);
-        }
-        else {
-          return false;
-        }
-      }
-    }
-  }
+  */
 
   return {
     start: () => {
