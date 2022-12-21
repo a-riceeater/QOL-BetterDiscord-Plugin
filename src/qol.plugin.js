@@ -33,8 +33,7 @@ module.exports = meta => {
       !isNaN(parseFloat(str))
   }
 
-  const messages = document.querySelector(".chatContent-3KubbW") // where messages are loaded; parent element
-  /*
+  const messages = _(".chatContent-3KubbW") // where messages are loaded; parent element
   const config = { attributes: true, childList: true, subtree: true };
 
   const callback = (mutationList, observer) => {
@@ -58,7 +57,6 @@ module.exports = meta => {
   };
 
   const observer = new MutationObserver(callback);
-  */
 
   return {
     start: () => {
@@ -76,7 +74,7 @@ module.exports = meta => {
           if (!isNumeric(String.fromCharCode(e.which))) return
           e.preventDefault();
           inputtedPassword += String.fromCharCode(e.which);
-          _("#bd-discordpswrd-qol-input").value = inputtedPassword;
+          document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
           authPassword();
         }
       });
@@ -135,6 +133,8 @@ module.exports = meta => {
       <span align="center" class="bd-discordpswrd-qol-num" style="margin-left: 50px;">4</span> <span align="center" class="bd-discordpswrd-qol-num">5</span> <span align="center" class="bd-discordpswrd-qol-num">6</span>
       <br><br>
       <span align="center" class="bd-discordpswrd-qol-num" style="margin-left: 50px;">7</span> <span align="center" class="bd-discordpswrd-qol-num">8</span> <span align="center" class="bd-discordpswrd-qol-num">9</span>
+      <br><br>
+      <span align="center" class="bd-discordpswrd-qol-num" style="margin-left: 50px;">0</span>
       <br><br>
       <span align="center" id="bd-discordpswrd-qol-backspace"><span style="font-size: 55px; vertical-align: middle;" data="bd-discordpswrd-qol-backspace">&#x2190;</span> <span style="font-size: 20px; vertical-align: middle;" data="bd-discordpswrd-qol-backspace">Backspace</span></span>
       `
@@ -199,38 +199,38 @@ module.exports = meta => {
         if (inAnimationPhase == true) return;
         if (isNumeric(e.target.innerHTML) && !inAnimationPhase) {
           inputtedPassword += e.target.innerHTML;
-          _("#bd-discordpswrd-qol-input").value = inputtedPassword;
+          document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
           authPassword();
         } else if (e.target.getAttribute("data") == "bd-discordpswrd-qol-backspace" && inputtedPassword.length > 0 && !inAnimationPhase) {
           inputtedPassword = inputtedPassword.slice(0, -1)
-          _("#bd-discordpswrd-qol-input").value = inputtedPassword;
+          document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
         } else if (e.shiftKey && e.ctrlKey && e.keyCode == 73 && password_input.style.display == "block") {
           e.preventDefault();
         }
       })
 
       function authPassword() {
-        if (inputtedPassword.length == 4) {
-          if (inputtedPassword == "1224") {
-            _("#bd-discordpswrd-qol-input").style.color = "#0be3ca"
+        if (inputtedPassword.length == settings.password.length) {
+          if (inputtedPassword == settings.password) {
+            document.querySelector("#bd-discordpswrd-qol-input").style.color = "#0be3ca"
             inputtedPassword = "";
             inAnimationPhase = true;
             setTimeout(function () {
               password_input.style.display = "none"
               shade.style.display = "none"
-              _("#bd-discordpswrd-qol-input").style.color = "white"
-              _("#bd-discordpswrd-qol-input").value = ""
+              document.querySelector("#bd-discordpswrd-qol-input").style.color = "white"
+              document.querySelector("#bd-discordpswrd-qol-input").value = ""
               inAnimationPhase = false;
               timerIncrement();
               return
             }, 1200)
           } else {
-            _("#bd-discordpswrd-qol-input").style.color = "red"
+            document.querySelector("#bd-discordpswrd-qol-input").style.color = "red"
             inputtedPassword = "";
             inAnimationPhase = true;
             setTimeout(function () {
-              _("#bd-discordpswrd-qol-input").value = ""
-              _("#bd-discordpswrd-qol-input").style.color = "white"
+              document.querySelector("#bd-discordpswrd-qol-input").value = ""
+              document.querySelector("#bd-discordpswrd-qol-input").style.color = "white"
               inAnimationPhase = false;
               return
             }, 500)
@@ -419,9 +419,15 @@ module.exports = meta => {
         } else if (password.length >= 6 && password.length < 8) {
           passwordStrEle.innerHTML = "Strong";
           passwordStrEle.style.color = "green";
-        } else if (password.length > 8) {
+        } else if (password.length >= 8 && password.length < 20) {
           passwordStrEle.innerHTML = "Very strong wtf";
           passwordStrEle.style.color = "green";
+        } else if (password.length >= 20 && password.length < 100) {
+          passwordStrEle.innerHTML = "ARE YOU OKAY??";
+          passwordStrEle.style.color = "green";
+        } else if (password.length >= 100) {
+          passwordStrEle.innerHTML = "BRO GET SOME FREAKING THERAPY";
+          passwordStrEle.style.color = "red";
         } else {
           passwordStrEle.innerHTML = ""
         }
@@ -443,7 +449,7 @@ module.exports = meta => {
       pswrd_il.style.verticalAlign = "middle"
       setTimeout(() => {
         calculatePasswordStrength();
-      }, 150)
+      }, 1000)
 
       const password_timeout = document.createElement("input")
       password_timeout.value = "60"
