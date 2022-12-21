@@ -490,7 +490,7 @@ module.exports = meta => {
       }, 1000)
 
       const password_timeout = document.createElement("input")
-      password_timeout.value = "60"
+      password_timeout.value = settings.idleTime;
       password_timeout.type = "number"
       password_timeout.style.border = "none"
       password_timeout.style.background = "none"
