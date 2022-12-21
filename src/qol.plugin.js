@@ -1,6 +1,6 @@
 /**
  * @name QOLPlugin
- * @author ghostyval
+ * @author darthvader1925
  * @description A QOL Plugin with button hiding, lock screen etc.
  * @version 0.0.1
  */
