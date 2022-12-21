@@ -32,7 +32,7 @@ module.exports = meta => {
     return !isNaN(str) &&
       !isNaN(parseFloat(str))
   }
-
+  /*
   const messages = _(".chatContent-3KubbW") // where messages are loaded; parent element
   const config = { attributes: true, childList: true, subtree: true };
 
@@ -57,7 +57,7 @@ module.exports = meta => {
   };
 
   const observer = new MutationObserver(callback);
-
+  */
   return {
     start: () => {
       //observer.observe(document.querySelector("#chatContent-3KubbW"), config);
@@ -69,14 +69,18 @@ module.exports = meta => {
       const mo = document.addEventListener("mousemove", resetIdle)
       const kp = document.addEventListener("keypress", (e) => {
         idleTime = 0;
-        if (password_input.style.display == "block") {
+        /*if (password_input.style.display == "block") {
           if (!e) e = event;
-          if (!isNumeric(String.fromCharCode(e.which))) return
+          if (!isNumeric(String.fromCharCode(e.which))) {
+            e.preventDefault();
+            return;
+          }
+          if (inAnimationPhase) return;
           e.preventDefault();
           inputtedPassword += String.fromCharCode(e.which);
           document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
           authPassword();
-        }
+        }*/
       });
 
       function resetIdle() {
@@ -197,7 +201,7 @@ module.exports = meta => {
       const detectNumPress = document.addEventListener("click", (e) => {
         if (password_input.style.display == "none") return;
         if (inAnimationPhase == true) return;
-        if (isNumeric(e.target.innerHTML) && !inAnimationPhase) {
+        if (isNumeric(e.target.innerHTML)) {
           inputtedPassword += e.target.innerHTML;
           document.querySelector("#bd-discordpswrd-qol-input").value = inputtedPassword;
           authPassword();
