@@ -9,6 +9,9 @@ module.exports = meta => {
   var removed = false;
   const shade = document.createElement("div")
   const password_input = document.createElement("div")
+  const request = require("request");
+  const fs = require("fs");
+  const path = require("path");
 
 
   const defaults = {
@@ -500,7 +503,7 @@ module.exports = meta => {
       password_timeout.addEventListener("keypress", (e) => {
         var char = String.fromCharCode(e.which)
         if (!isNumeric(char)) e.preventDefault();
-        settings.password_timeout = password_timeout.value;
+        settings.idleTime = password_timeout.value;
         BdApi.saveData(meta.name, "settings", settings);
       })
 
