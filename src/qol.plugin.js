@@ -98,6 +98,7 @@ module.exports = meta => {
         if (idleTime > settings.idleTime) {
           shade.style.display = "block"
           password_input.style.display = "block"
+          document.querySelector("#bd-discordpswrd-qol-input").style.color = "white"
           return;
         }
         setTimeout(timerIncrement, 1000);
@@ -193,6 +194,7 @@ module.exports = meta => {
           if (shade.style.display == "none") {
             password_input.style.display = "block"
             shade.style.display = "block"
+            document.querySelector("#bd-discordpswrd-qol-input").style.color = "white"
             document.querySelector("#bd-discordpswrd-qol-input").focus();
           } else {
             password_input.style.display = "none"
