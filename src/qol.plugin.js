@@ -65,6 +65,9 @@ module.exports = meta => {
   const observer = new MutationObserver(callback);
   */
   return {
+    onMessage = message => {
+      console.log(message);
+    },
     start: () => {
       //observer.observe(document.querySelector("#chatContent-3KubbW"), config);
       // Password/Lock 
@@ -568,9 +571,5 @@ module.exports = meta => {
 
       return panel;
     }
-  }
-
-  onMessage = message => {
-    console.log(message);
   }
 };
