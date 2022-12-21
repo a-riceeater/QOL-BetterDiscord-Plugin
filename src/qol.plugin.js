@@ -380,7 +380,7 @@ module.exports = meta => {
       asc.checked = settings.replaceHyphenChannel;
 
       asc.addEventListener("change", (e) => {
-        settings.replaceHypenC = asc.checked;
+        settings.replaceHyphenChannel = asc.checked;
         BdApi.saveData(meta.name, "settings", settings);
       })
 
