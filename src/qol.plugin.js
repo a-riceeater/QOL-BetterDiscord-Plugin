@@ -40,13 +40,18 @@ module.exports = meta => {
     // catch deleted messages
     for (const mutation of mutationList) {
       mutation.removedNodes.forEach(removedNode => {
+        if (removedNode.innerHTML.includes("isSending-3SiDwE")) return
+        if (!removedNode.getAttribute("class").includes("messageListItem")) return
         console.log("NODE REMOVED: " + removedNode.innerHTML)
-        // recreateMessage
-        const recreateMessage = document.createElement("div")
-          .innerHTML = removedNode.innerHTML
-            .setAttribute("class", "bd-qol-messagelogging-deleted")
-              .setAttribute("title", "(A deleted message)")
-        messages.appendChild(recreateMessage);
+        console.log(removedNode.tagName, removedNode.getAttribute("id", removedNode.className));
+
+        // recreate the message
+        const recreateMessage = document.createElement("li")
+        recreateMessage.innerHTML = removedNode.innerHTML + " <span style='color: red'>(deleted)</span>"
+        recreateMessage.setAttribute("class", "bd-qol-messagelogging-deleted")
+        recreateMessage.setAttribute("title", "(A deleted message)")
+        recreateMessage.style.setProperty("color", "red", "important")
+        document.querySelector(".scrollerInner-2PPAp2").appendChild(recreateMessage);
       })
     }
   };
@@ -106,10 +111,10 @@ module.exports = meta => {
           password_input.style.display = "block"
           return;
         }
-        setTimeout(timerIncrement, 1000);
+        //setTimeout(timerIncrement, 1000);
       }
 
-      timerIncrement()
+      //timerIncrement()
 
       shade.style.position = "fixed";
       shade.style.top = "0%";
@@ -193,7 +198,7 @@ module.exports = meta => {
           if (shade.style.display == "none") {
             password_input.style.display = "block"
             shade.style.display = "block"
-            _("#bd-discordpswrd-qol-input").focus();
+            document.querySelector("#bd-discordpswrd-qol-input").focus();
           } else {
             password_input.style.display = "none"
             shade.style.display = "none"
@@ -275,16 +280,18 @@ module.exports = meta => {
       //document.removeEventListener("mousemove", mo)
     },
     onSwitch: () => {
-      observer.disconnect()
-      observer.observe(document.querySelector("#chatContent-3KubbW"), config);
+      //setTimeout(function() {
+        //observer.disconnect()
+        //observer.observe(document.querySelector(".scrollerInner-2PPAp2"), config);
+      //}, 1000)
       function hideIcons() {
         console.log("hiding icons");
-        _(".buttonWrapper-3YFQGJ", true).forEach(button => {
+        document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
           if (settings.hideMsgIcons == false) return
           button.style.display = 'none'; // message bar
         })
 
-        _(".icon-2W8DHg", true).forEach(button => {
+        document.querySelectorAll(".icon-2W8DHg").forEach(button => {
           if (settings.hideChannelIcons == false) return
           button.style.display = 'none'; // channel icons
         })
@@ -422,7 +429,7 @@ module.exports = meta => {
 
       passwordP.append(pswrd_input, pswrd_il)
       passwordP.append(lineBreak1, password_timeout, pswrdt_l)
-
+      /*
       const messageLogging = document.createElement("div")
       messageLogging.style.fontWeight = "bold"
       messageLogging.style.marginBottom = "10px"
@@ -461,7 +468,9 @@ module.exports = meta => {
 
       msgEditCheck.addEventListener("click", (e) => {
 
-      })
+      })*/
+
+      
       return panel;
     }
   }
