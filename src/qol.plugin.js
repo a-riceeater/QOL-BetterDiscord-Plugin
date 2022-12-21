@@ -525,8 +525,6 @@ module.exports = meta => {
       msgEditCheck.addEventListener("click", (e) => {
 
       })*/
-
-
       return panel;
     }
   }
