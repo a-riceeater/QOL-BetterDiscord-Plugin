@@ -191,6 +191,10 @@ module.exports = meta => {
     #bd-discordpswrd-qol-backspace:hover {
       color: #0be3ca;
     }
+
+    #bd-password-strength {
+      margin-left: 10px;
+    }
   `);
 
       const detectKeyShow = document.addEventListener("keydown", (e) => {
@@ -281,8 +285,8 @@ module.exports = meta => {
     },
     onSwitch: () => {
       //setTimeout(function() {
-        //observer.disconnect()
-        //observer.observe(document.querySelector(".scrollerInner-2PPAp2"), config);
+      //observer.disconnect()
+      //observer.observe(document.querySelector(".scrollerInner-2PPAp2"), config);
       //}, 1000)
       function hideIcons() {
         console.log("hiding icons");
@@ -392,21 +396,71 @@ module.exports = meta => {
       pswrd_input.style.fontSize = "15px"
       pswrd_input.style.verticalAlign = "middle"
       pswrd_input.style.color = "aqua"
+      pswrd_input.value = settings.password;
       pswrd_input.addEventListener("keypress", (e) => {
         var char = String.fromCharCode(e.which)
+        if (e.keyCode == 46) {
+          setTimeout(() => {
+            calculatePasswordStrength()
+          })
+        }
         if (!isNumeric(char)) e.preventDefault();
-        settings.password = pswrd_input.value;
-        BdApi.saveData(meta.name, "settings", settings);
+        setTimeout(() => {
+          settings.password = pswrd_input.value;
+          BdApi.saveData(meta.name, "settings", settings);
+          var hiddenPswrd = "";
+          for (let i = 0; i < settings.password.length - 1; i++) {
+            hiddenPswrd += "*"
+          }
+          hiddenPswrd += settings.password.slice(-1);
+          pswrd_il.innerHTML = "Pin (current: " + hiddenPswrd + ") <span id='bd-password-strength'></span>"
+          calculatePasswordStrength();
+        })
       })
+
+      function calculatePasswordStrength() {
+        if (!document.body.contains(document.querySelector("#bd-password-strength"))) {
+          console.error("Body does not contain bd-password-strength");
+          return
+        }
+        const password = settings.password;
+        const passwordStrEle = document.querySelector("#bd-password-strength");
+        
+        // Calculate strength of password
+        if (password.length < 4) {
+          passwordStrEle.innerHTML = "Very weak";
+          passwordStrEle.style.color = "red";
+        } else if (password.length >= 4 && password.length < 6) {
+          passwordStrEle.innerHTML = "Weak";
+          passwordStrEle.style.color = "orange";
+        } else if (password.length >= 6 && password.length < 8) {
+          passwordStrEle.innerHTML = "Strong";
+          passwordStrEle.style.color = "green";
+        } else if (password.length > 8) {
+          passwordStrEle.innerHTML = "Very strong wtf";
+          passwordStrEle.style.color = "green";
+        } else {
+          passwordStrEle.innerHTML = ""
+        }
+      }
 
 
       const pswrd_il = document.createElement("span")
-      pswrd_il.innerHTML = "Pin"
+      var hiddenPswrd = "";
+      console.log(settings.password.length)
+      for (let i = 0; i < settings.password.length - 1; i++) {
+        hiddenPswrd += "*"
+      }
+      hiddenPswrd += settings.password.slice(-1);
+      pswrd_il.innerHTML = "Pin (current: " + hiddenPswrd + ") <span id='bd-password-strength'></span>"
       pswrd_il.style.marginLeft = "10px"
       pswrd_il.style.color = "white"
       pswrd_il.style.height = "20px"
       pswrd_il.style.width = "20px"
       pswrd_il.style.verticalAlign = "middle"
+      setTimeout(() => {
+        calculatePasswordStrength();
+      }, 150)
 
       const password_timeout = document.createElement("input")
       password_timeout.value = "60"
