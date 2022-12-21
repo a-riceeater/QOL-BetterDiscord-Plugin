@@ -290,9 +290,10 @@ module.exports = meta => {
       hideIcons();
 
       function addSpaceInChannelNames() {
-        if (settings.replaceHyphenChannel == true) return
-        document.querySelectorAll("#channelName-3KPsGw").forEach(channel => {
-          channel.innerHTML = channel.innerHTMl.replaceAll("-", "")
+        if (settings.replaceHyphenChannel == false) return
+        document.querySelectorAll(".channelName-3KPsGw").forEach(channel => {
+          console.log(channel.innerHTML)
+          channel.innerHTML = channel.innerHTML.replaceAll("-", " ")
         })
       }
       addSpaceInChannelNames();
@@ -385,7 +386,7 @@ module.exports = meta => {
       })
 
       const asc_l = document.createElement("span")
-      asc_l.innerHTML = `Replace "-" with "-"`
+      asc_l.innerHTML = `Replace "-" with "-" in channel names`
       asc_l.style.marginLeft = "10px"
       asc_l.style.color = "white"
       asc_l.style.height = "20px"
