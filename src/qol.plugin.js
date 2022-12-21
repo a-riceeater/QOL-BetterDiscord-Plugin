@@ -100,7 +100,7 @@ module.exports = meta => {
           password_input.style.display = "block"
           return;
         }
-        //setTimeout(timerIncrement, 1000);
+        setTimeout(timerIncrement, 1000);
       }
 
       timerIncrement()
