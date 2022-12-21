@@ -4,6 +4,8 @@
  * @description A QOL Plugin with button hiding, lock screen etc.
  * @version 0.0.1
  */
+const {Webpack, Webpack: {Filters}} = BdApi;
+const Dispatcher = Webpack.getModule(Filters.byProps("dispatch", "isDispatching"));
 
 module.exports = meta => {
   var removed = false;
@@ -69,6 +71,7 @@ module.exports = meta => {
       //BdApi.alert("Welcome!", "QOL Plugin activated.");
       var idleTime = 0;
       var inAnimationPhase = false;
+      Dispatcher.subscribe("MESSAGE_CREATE", this.onMessage);
 
       const mo = document.addEventListener("mousemove", resetIdle)
       const kp = document.addEventListener("keypress", (e) => {
@@ -267,6 +270,7 @@ module.exports = meta => {
       BdApi.clearCSS("QOLPlugin");
       shade.remove()
       // observer.disconnect();
+      Dispatcher.unsubscribe("MESSAGE_CREATE", this.onMessage);
       password_input.remove()
       removed = true;
       //document.removeEventListener("keydown", detectKeyShow)
@@ -564,5 +568,9 @@ module.exports = meta => {
 
       return panel;
     }
+  }
+
+  onMessage = message => {
+    console.log(message);
   }
 };
