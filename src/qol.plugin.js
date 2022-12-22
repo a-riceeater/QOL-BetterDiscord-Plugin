@@ -51,7 +51,7 @@ const listener = (action) => {
       notification.addEventListener("click", () => {
         console.log("transitioning to server")
         const transitionTo = BdApi.Webpack.getModule((m) => typeof m === "function" && String(m).includes(`"transitionTo - Transitioning to "`), { searchExports: true });
-        transitionTo("/channels/" + action.guild_id + "/" + action.channelId);
+        transitionTo("/channels/" + action.message.guild_id + "/" + action.channelId);
         notification.remove();
       })
       setTimeout(() => {
