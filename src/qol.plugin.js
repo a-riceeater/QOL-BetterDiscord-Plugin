@@ -688,7 +688,7 @@ module.exports = meta => {
       useOnlyPush_l.style.verticalAlign = "middle"
 
       uop.append(useOnlyPush_i, useOnlyPush_l)*/
-      iaNotifications.append(showAppNotifications, uop)
+      iaNotifications.append(showAppNotifications)
     
       panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP, iaNotifications);
 
