@@ -4,16 +4,75 @@
  * @description A QOL Plugin with button hiding, lock screen etc.
  * @version 0.0.1
  */
-const {Webpack, Webpack: {Filters}} = BdApi;
+const { Webpack, Webpack: { Filters } } = BdApi;
 const Dispatcher = Webpack.getModule(Filters.byProps("dispatch", "isDispatching"));
+const listener = (action) => {
+  if (!action.isPushNotification) return
+  if (action.message.state == "SENDING") return
+  if (action.message.content == null || action.message.content == "") return
+  console.log(action.message.content)
+
+  document.querySelectorAll(".bd-qol-notification").forEach(noti => {
+    noti.remove();
+  })
+
+  try {
+    const author = action.message.author.username;
+    const profilePicture = "https://cdn.discordapp.com/avatars/" + action.message.author.id + "/" + action.message.author.avatar + ".webp";
+    const notification = document.createElement("div")
+    if (action.message.content.length > 20) {
+      notification.innerHTML = `
+      <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author}</span>
+      <br><br>
+      <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 17)}...</span>
+      <br><br>
+      `
+    } else {
+      notification.innerHTML = `
+  <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author}</span>
+  <br><br>
+  <span class="bd-notification-content" style="margin-left: 15px">${action.message.content}</span>
+  <br><br>
+  `
+    }
+ 
+    notification.classList.add("bd-qol-notification")
+    
+
+
+    const id = performance.now();
+    const progressBar = document.createElement("div");
+    progressBar.classList.add("bd-qol-notification-progress");
+    progressBar.setAttribute("id", "bd-" + id)
+    notification.appendChild(progressBar);
+
+    document.body.append(notification)
+
+    setTimeout(() => {
+      var progress = 100;
+      function changeProgressBar() {
+        if (!document.contains(progressBar)) return
+        progress -= 1;
+        progressBar.style.width = progress + "%";
+        if (progress == 0) {
+          notification.remove()
+          return
+        };
+        setTimeout(changeProgressBar, 20)
+      }
+      changeProgressBar();
+    }, 500)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 
 module.exports = meta => {
   var removed = false;
   const shade = document.createElement("div")
   const password_input = document.createElement("div")
-  const request = require("request");
-  const fs = require("fs");
-  const path = require("path");
+
 
 
   const defaults = {
@@ -65,16 +124,13 @@ module.exports = meta => {
   const observer = new MutationObserver(callback);
   */
   return {
-    onMessage = message => {
-      console.log(message);
-    },
     start: () => {
       //observer.observe(document.querySelector("#chatContent-3KubbW"), config);
       // Password/Lock 
       //BdApi.alert("Welcome!", "QOL Plugin activated.");
       var idleTime = 0;
       var inAnimationPhase = false;
-      Dispatcher.subscribe("MESSAGE_CREATE", this.onMessage);
+      Dispatcher.subscribe("MESSAGE_CREATE", listener);
 
       const mo = document.addEventListener("mousemove", resetIdle)
       const kp = document.addEventListener("keypress", (e) => {
@@ -193,6 +249,29 @@ module.exports = meta => {
     #bd-password-strength {
       margin-left: 10px;
     }
+
+    .bd-qol-notification {
+      position: fixed;
+      z-index: 9997;
+      left: 1%;
+      top: 1%;
+      width: 250px;
+      background: #36393F;
+      color: white;
+      height: 100px;
+    }
+
+    .bd-notification-pfp {
+      height: 80px;
+      width: 80px;
+      border-radius: 100%;
+    }
+
+    .bd-qol-notification-progress {
+      width: 100%;
+      background: #195ea8;
+      height: 10px;
+    }
   `);
 
       const detectKeyShow = document.addEventListener("keydown", (e) => {
@@ -272,8 +351,7 @@ module.exports = meta => {
     stop: () => {
       BdApi.clearCSS("QOLPlugin");
       shade.remove()
-      // observer.disconnect();
-      Dispatcher.unsubscribe("MESSAGE_CREATE", this.onMessage);
+      Dispatcher.unsubscribe("MESSAGE_CREATE", listener);
       password_input.remove()
       removed = true;
       //document.removeEventListener("keydown", detectKeyShow)
@@ -527,7 +605,7 @@ module.exports = meta => {
 
       passwordP.append(pswrd_input, pswrd_il)
       passwordP.append(lineBreak1, password_timeout, pswrdt_l)
-      
+      /*
       const messageLogging = document.createElement("div")
       messageLogging.style.fontWeight = "bold"
       messageLogging.style.marginBottom = "10px"
@@ -557,19 +635,21 @@ module.exports = meta => {
  
       messageLogging.append(msgDeleteCheck, msgDeleteCheck_label)
       messageLogging.append(lineBreak2, msgEditCheck, msgEditCheck_label)
-      
+      */
       panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP); // message logging
-      
+      /*
       msgDeleteCheck.addEventListener("change", (e) => {
  
       })
  
       msgEditCheck.addEventListener("click", (e) => {
  
-      })
+      })*/
 
 
       return panel;
     }
   }
+
+
 };
