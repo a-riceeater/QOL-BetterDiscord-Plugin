@@ -9,11 +9,16 @@ const Dispatcher = Webpack.getModule(Filters.byProps("dispatch", "isDispatching"
 const UserStore = Webpack.getModule(m => m?._dispatchToken && m?.getName() === "UserStore");
 const clientUsername = UserStore.getCurrentUser().username;
 const clientId = UserStore.getCurrentUser().id;
+var showPush = false;
+var useOnlyPush = true;
 console.log("client id " + clientId)
 
 const listener = (action) => {
   console.log(action)
-  if (!action.isPushNotification) return
+  if (!showPush) return
+  //if (!action.isPushNotification) {
+    //if (useOnlyPush) return
+ // }
   if (action.message.state == "SENDING") return
   if (action.message.content == null || action.message.content == "") return
 
@@ -23,6 +28,7 @@ const listener = (action) => {
 
   try {
     const author = action.message.author.username;
+    if (author == clientUsername) return;
     const profilePicture = "https://cdn.discordapp.com/avatars/" + action.message.author.id + "/" + action.message.author.avatar + ".webp";
     const notification = document.createElement("div")
     if (action.message.content.length > 28) {
@@ -126,6 +132,8 @@ module.exports = meta => {
     logDeletedMessages: false,
     logEditedMessages: false,
     replaceHyphenChannel: false,
+    useOnlyPush: true,
+    showPush: true,
   };
 
   const settings = {};
@@ -134,6 +142,8 @@ module.exports = meta => {
   Object.assign(settings, defaults, stored_data);
   console.log("QOL PLUGIN SETTINGS:")
   console.log(settings);
+  showPush = settings.showPush;
+  useOnlyPush = settings.useOnlyPush;
 
   function isNumeric(str) {
     if (typeof str != "string") return false
@@ -624,51 +634,65 @@ module.exports = meta => {
 
       passwordP.append(pswrd_input, pswrd_il)
       passwordP.append(lineBreak1, password_timeout, pswrdt_l)
-      /*
-      const messageLogging = document.createElement("div")
-      messageLogging.style.fontWeight = "bold"
-      messageLogging.style.marginBottom = "10px"
-      messageLogging.style.marginTop = "10px"
-      messageLogging.innerHTML = `
-      <h2 style="color: white">Message Logging</h2>
+
+      const iaNotifications = document.createElement("div")
+      iaNotifications.innerHTML = 
+      `
+      <br>
+      <h1 style="color: white;"><b>In-app Notifications</b></h1>
       <br>
       `
- 
-      const msgDeleteCheck = document.createElement("input")
-      msgDeleteCheck.type = "checkbox"
-      msgDeleteCheck.setAttribute("style","height: 20px; width: 20px; cursor: pointer; vertical-align: middle;")
- 
-      const msgDeleteCheck_label = document.createElement("span")
-      msgDeleteCheck_label.innerHTML = "Show deleted messages"
-      msgDeleteCheck_label.setAttribute("style", "color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;")
- 
-      const lineBreak2 = document.createElement("br")
- 
-      const msgEditCheck = document.createElement("input")
-      msgEditCheck.type = "checkbox"
-      msgEditCheck.setAttribute("style","height: 20px; width: 20px; cursor: pointer; vertical-align: middle;")
- 
-      const msgEditCheck_label = document.createElement("span")
-      msgEditCheck_label.innerHTML = "Show edited messages"
-      msgEditCheck_label.setAttribute("style", "color: white; margin-left: 10px; height: 20px; width: 20px; vertical-align: middle;")
- 
-      messageLogging.append(msgDeleteCheck, msgDeleteCheck_label)
-      messageLogging.append(lineBreak2, msgEditCheck, msgEditCheck_label)
-      */
-      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP); // message logging
-      /*
-      msgDeleteCheck.addEventListener("change", (e) => {
- 
-      })
- 
-      msgEditCheck.addEventListener("click", (e) => {
- 
-      })*/
 
+      const showAppNotifications = document.createElement("div")
+      const san_i = document.createElement("input")
+      san_i.type = "checkbox";
+      san_i.checked = settings.showPush;
+      san_i.style.cursor = "pointer"
+      san_i.style.height = "20px"
+      san_i.style.width = "20px"
+      san_i.style.verticalAlign = "middle"
+      san_i.addEventListener("change", () => {
+        settings.showPush = san_i.checked;
+        BdApi.saveData(meta.name, "settings", settings);
+        showPush = san_i.checked;
+      })
+      const san_l = document.createElement("span");
+      san_l.innerHTML = "Show in-app notificiations"
+      san_l.style.marginLeft = "10px"
+      san_l.style.color = "white"
+      san_l.style.height = "20px"
+      san_l.style.width = "20px"
+      san_l.style.verticalAlign = "middle"
+      showAppNotifications.append(san_i, san_l);
+/*
+      const uop = document.createElement("div")
+      const useOnlyPush_i = document.createElement("input")
+      useOnlyPush_i.type = "checkbox";
+      useOnlyPush_i.checked = settings.useOnlyPush;
+      useOnlyPush_i.style.cursor = "pointer"
+      useOnlyPush_i.style.height = "20px"
+      useOnlyPush_i.style.width = "20px"
+      useOnlyPush_i.style.verticalAlign = "middle"
+      useOnlyPush_i.addEventListener("change", (e) => {
+        settings.useOnlyPush = useOnlyPush_i.checked;
+        BdApi.saveData(meta.name, "settings", settings);
+        useOnlyPush = useOnlyPush_i.checked;
+      })
+
+      const useOnlyPush_l = document.createElement("span")
+      useOnlyPush_l.innerHTML = "Only show important notifications (when mentioned, etc)"
+      useOnlyPush_l.style.marginLeft = "10px"
+      useOnlyPush_l.style.color = "white"
+      useOnlyPush_l.style.height = "20px"
+      useOnlyPush_l.style.width = "20px"
+      useOnlyPush_l.style.verticalAlign = "middle"
+
+      uop.append(useOnlyPush_i, useOnlyPush_l)*/
+      iaNotifications.append(showAppNotifications, uop)
+    
+      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP, iaNotifications);
 
       return panel;
     }
   }
-
-
 };
