@@ -20,39 +20,45 @@ const listener = (action) => {
   try {
     const author = action.message.author.username;
     const profilePicture = "https://cdn.discordapp.com/avatars/" + action.message.author.id + "/" + action.message.author.avatar + ".webp";
-    const notification = document.createElement("a")
+    const notification = document.createElement("div")
     if (action.message.content.length > 28) {
       notification.innerHTML = `
-      <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author}</span> | <span id="bd-notification-channel"></span>
+      <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span> | <span id="bd-notification-channel" style="vertical-align: middle; margin-top: 10px; font-size: 17px;"></span>
       <br><br>
       <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
       <br><br>
       `
     } else {
       notification.innerHTML = `
-  <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author}</span>
+  <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span> | <span id="bd-notification-channel" style="vertical-align: middle; margin-top: 10px; font-size: 17px;"></span>
   <br><br>
   <span class="bd-notification-content" style="margin-left: 15px">${action.message.content}</span>
   <br><br>
   `
     }
-    if (!action.message.guild_id == null || !action.message.guild_id == undefined) {
-      notification.setAttribute("href", "'/channels/" + action.guild_id + "/" + action.channelId)
+    if (action.message.guild_id == null || action.message.guild_id == undefined) {
+      notification.addEventListener("click", () => {
+        console.log("Transitioning to DM")
+        const transitionTo = BdApi.Webpack.getModule((m) => typeof m === "function" && String(m).includes(`"transitionTo - Transitioning to "`), { searchExports: true });
+        transitionTo("/channels/@me/" + action.channelId);
+        notification.remove();
+      })
       setTimeout(() => {
         document.querySelector("#bd-notification-channel").innerHTML = "#" + action.channelId
       }, 150)
 
     } else {
-      notification.setAttribute("href", "/channels/@me/" + action.channelId)
+      notification.addEventListener("click", () => {
+        console.log("transitioning to server")
+        const transitionTo = BdApi.Webpack.getModule((m) => typeof m === "function" && String(m).includes(`"transitionTo - Transitioning to "`), { searchExports: true });
+        transitionTo("/channels/" + action.guild_id + "/" + action.channelId);
+        notification.remove();
+      })
       setTimeout(() => {
-        document.querySelector("#bd-notification-channel").innerHTML = "#" + action.channelId
+        document.querySelector("#bd-notification-channel").innerHTML = "#" + action.channelId 
       }, 150)
     }
     notification.classList.add("bd-qol-notification")
-    notification.setAttribute("role", "link")
-    notification.setAttribute("data-list-item-id","channels__" + action.channelId)
-    
-
 
     const id = performance.now();
     const progressBar = document.createElement("div");
@@ -269,10 +275,11 @@ module.exports = meta => {
       z-index: 9997;
       left: 1%;
       top: 1%;
-      width: 260px;
+      width: 350px;
       background: #36393F;
       color: white;
       height: 100px;
+      cursor: pointer;
     }
 
     .bd-notification-pfp {
