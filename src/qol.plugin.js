@@ -7,7 +7,8 @@
 const { Webpack, Webpack: { Filters } } = BdApi;
 const Dispatcher = Webpack.getModule(Filters.byProps("dispatch", "isDispatching"));
 const listener = (action) => {
-  if (!action.isPushNotification) return
+  console.log(action)
+  // if (!action.isPushNotification) return
   if (action.message.state == "SENDING") return
   if (action.message.content == null || action.message.content == "") return
   console.log(action.message.content)
@@ -19,12 +20,12 @@ const listener = (action) => {
   try {
     const author = action.message.author.username;
     const profilePicture = "https://cdn.discordapp.com/avatars/" + action.message.author.id + "/" + action.message.author.avatar + ".webp";
-    const notification = document.createElement("div")
-    if (action.message.content.length > 20) {
+    const notification = document.createElement("a")
+    if (action.message.content.length > 28) {
       notification.innerHTML = `
-      <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author}</span>
+      <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author}</span> | <span id="bd-notification-channel"></span>
       <br><br>
-      <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 17)}...</span>
+      <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
       <br><br>
       `
     } else {
@@ -35,8 +36,21 @@ const listener = (action) => {
   <br><br>
   `
     }
- 
+    if (!action.message.guild_id == null || !action.message.guild_id == undefined) {
+      notification.setAttribute("href", "'/channels/" + action.guild_id + "/" + action.channelId)
+      setTimeout(() => {
+        document.querySelector("#bd-notification-channel").innerHTML = "#" + action.channelId
+      }, 150)
+
+    } else {
+      notification.setAttribute("href", "/channels/@me/" + action.channelId)
+      setTimeout(() => {
+        document.querySelector("#bd-notification-channel").innerHTML = "#" + action.channelId
+      }, 150)
+    }
     notification.classList.add("bd-qol-notification")
+    notification.setAttribute("role", "link")
+    notification.setAttribute("data-list-item-id","channels__" + action.channelId)
     
 
 
@@ -58,7 +72,7 @@ const listener = (action) => {
           notification.remove()
           return
         };
-        setTimeout(changeProgressBar, 20)
+        setTimeout(changeProgressBar, 35)
       }
       changeProgressBar();
     }, 500)
@@ -255,7 +269,7 @@ module.exports = meta => {
       z-index: 9997;
       left: 1%;
       top: 1%;
-      width: 250px;
+      width: 260px;
       background: #36393F;
       color: white;
       height: 100px;
