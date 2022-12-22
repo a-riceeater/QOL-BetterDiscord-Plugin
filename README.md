@@ -7,4 +7,5 @@
     <li>Icon Hiding (channel #'s, message bar icons, etc)</li>
     <li>Lock screen and auto-lock</li>
     <li>In-app notifications</li>
+    <li>More features coming soon</li>
 </ul>
