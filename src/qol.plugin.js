@@ -2,16 +2,20 @@
  * @name QOLPlugin
  * @author darthvader1925
  * @description A QOL Plugin with button hiding, lock screen etc.
- * @version 0.0.1
+ * @version 1.2.1
  */
 const { Webpack, Webpack: { Filters } } = BdApi;
 const Dispatcher = Webpack.getModule(Filters.byProps("dispatch", "isDispatching"));
+const UserStore = Webpack.getModule(m => m?._dispatchToken && m?.getName() === "UserStore");
+const clientUsername = UserStore.getCurrentUser().username;
+const clientId = UserStore.getCurrentUser().id;
+console.log("client id " + clientId)
+
 const listener = (action) => {
   console.log(action)
-  // if (!action.isPushNotification) return
+  if (!action.isPushNotification) return
   if (action.message.state == "SENDING") return
   if (action.message.content == null || action.message.content == "") return
-  console.log(action.message.content)
 
   document.querySelectorAll(".bd-qol-notification").forEach(noti => {
     noti.remove();
@@ -22,19 +26,38 @@ const listener = (action) => {
     const profilePicture = "https://cdn.discordapp.com/avatars/" + action.message.author.id + "/" + action.message.author.avatar + ".webp";
     const notification = document.createElement("div")
     if (action.message.content.length > 28) {
-      notification.innerHTML = `
-      <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span> | <span id="bd-notification-channel" style="vertical-align: middle; margin-top: 10px; font-size: 17px;"></span>
-      <br><br>
-      <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
-      <br><br>
-      `
+      if (action.message.guild_id == undefined || action.message.guild_id == null) {
+        notification.innerHTML = `
+        <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span>
+        <br><br>
+        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
+        <br><br>
+        `
+      } else {
+        notification.innerHTML = `
+        <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span> | <span id="bd-notification-channel" style="vertical-align: middle; margin-top: 10px; font-size: 17px;">#${action.message.channel_id}</span>
+        <br><br>
+        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
+        <br><br>
+        `
+      }
     } else {
-      notification.innerHTML = `
-  <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span> | <span id="bd-notification-channel" style="vertical-align: middle; margin-top: 10px; font-size: 17px;"></span>
-  <br><br>
-  <span class="bd-notification-content" style="margin-left: 15px">${action.message.content}</span>
-  <br><br>
-  `
+      if (action.message.guild_id == undefined || action.message.guild_id == null) {
+        notification.innerHTML = `
+        <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span>
+        <br><br>
+        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content}</span>
+        <br><br>
+        `
+      } else {
+        notification.innerHTML = `
+        <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span> | <span id="bd-notification-channel" style="vertical-align: middle; margin-top: 10px; font-size: 17px;">#${action.message.channel_id}</span>
+        <br><br>
+        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content}</span>
+        <br><br>
+        `
+      }
+
     }
     if (action.message.guild_id == null || action.message.guild_id == undefined) {
       notification.addEventListener("click", () => {
@@ -43,10 +66,6 @@ const listener = (action) => {
         transitionTo("/channels/@me/" + action.channelId);
         notification.remove();
       })
-      setTimeout(() => {
-        document.querySelector("#bd-notification-channel").innerHTML = "#" + action.channelId
-      }, 150)
-
     } else {
       notification.addEventListener("click", () => {
         console.log("transitioning to server")
@@ -54,9 +73,7 @@ const listener = (action) => {
         transitionTo("/channels/" + action.message.guild_id + "/" + action.channelId);
         notification.remove();
       })
-      setTimeout(() => {
-        document.querySelector("#bd-notification-channel").innerHTML = "#" + action.channelId 
-      }, 150)
+
     }
     notification.classList.add("bd-qol-notification")
 
@@ -65,6 +82,12 @@ const listener = (action) => {
     progressBar.classList.add("bd-qol-notification-progress");
     progressBar.setAttribute("id", "bd-" + id)
     notification.appendChild(progressBar);
+
+    if (action.message.mention_everyone) notification.style.background = "#49443C"
+    if (action.message.content.includes("<@" + clientId + ">")) {
+      console.log("user mentioned")
+      notification.style.background = "#49443C"
+    }
 
     document.body.append(notification)
 
@@ -117,37 +140,12 @@ module.exports = meta => {
     return !isNaN(str) &&
       !isNaN(parseFloat(str))
   }
-  /*
-  const messages = _(".chatContent-3KubbW") // where messages are loaded; parent element
-  const config = { attributes: true, childList: true, subtree: true };
 
-  const callback = (mutationList, observer) => {
-    // catch deleted messages
-    for (const mutation of mutationList) {
-      mutation.removedNodes.forEach(removedNode => {
-        if (removedNode.innerHTML.includes("isSending-3SiDwE")) return
-        if (!removedNode.getAttribute("class").includes("messageListItem")) return
-        console.log("NODE REMOVED: " + removedNode.innerHTML)
-        console.log(removedNode.tagName, removedNode.getAttribute("id", removedNode.className));
-
-        // recreate the message
-        const recreateMessage = document.createElement("li")
-        recreateMessage.innerHTML = removedNode.innerHTML + " <span style='color: red'>(deleted)</span>"
-        recreateMessage.setAttribute("class", "bd-qol-messagelogging-deleted")
-        recreateMessage.setAttribute("title", "(A deleted message)")
-        recreateMessage.style.setProperty("color", "red", "important")
-        document.querySelector(".scrollerInner-2PPAp2").appendChild(recreateMessage);
-      })
-    }
-  };
-
-  const observer = new MutationObserver(callback);
-  */
   return {
     start: () => {
-      //observer.observe(document.querySelector("#chatContent-3KubbW"), config);
-      // Password/Lock 
-      //BdApi.alert("Welcome!", "QOL Plugin activated.");
+      // Add zeres plugin lib
+      //if (!global.ZeresPluginLibrary) return window.BdApi.alert("Library Missing",`The library plugin needed for ${this.getName()} is missing.<br /><br /> <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js" target="_blank">Click here to download the library!</a>`);
+
       var idleTime = 0;
       var inAnimationPhase = false;
       Dispatcher.subscribe("MESSAGE_CREATE", listener);
