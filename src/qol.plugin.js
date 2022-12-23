@@ -2,7 +2,7 @@
  * @name QOLPlugin
  * @author darthvader1925
  * @description A QOL Plugin with button hiding, lock screen etc.
- * @version 1.2.1
+ * @version 1.2.3
  */
 const { Webpack, Webpack: { Filters } } = BdApi;
 const Dispatcher = Webpack.getModule(Filters.byProps("dispatch", "isDispatching"));
