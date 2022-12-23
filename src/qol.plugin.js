@@ -2,7 +2,7 @@
  * @name QOLPlugin
  * @author darthvader1925
  * @description A QOL Plugin with button hiding, lock screen etc.
- * @version 1.2.4
+ * @version 1.2.5
  */
 const { Webpack, Webpack: { Filters } } = BdApi;
 const Dispatcher = Webpack.getModule(Filters.byProps("dispatch", "isDispatching"));
@@ -136,8 +136,6 @@ module.exports = meta => {
   const shade = document.createElement("div")
   const password_input = document.createElement("div")
 
-
-
   const defaults = {
     password: "",
     hideMsgIcons: false,
@@ -151,6 +149,7 @@ module.exports = meta => {
     notiLocation: "Top Left",
     hideMessageAccessories: "block",
     hideDisabledEmojis: "block",
+    hideActivityText: "block",
   };
 
   const settings = {};
@@ -327,6 +326,10 @@ module.exports = meta => {
 
     .emojiItemDisabled-3VVnwp {
       display: ${settings.hideDisabledEmojis};
+    }
+
+    .activityText-1rR-8O {
+      display: ${settings.hideActivityText}};
     }
   `);
 
@@ -591,6 +594,7 @@ module.exports = meta => {
         if (hideD_i.checked) settings.hideDisabledEmojis = "none"
         else settings.hideDisabledEmojis = "block"
         BdApi.saveData(meta.name, "settings", settings);
+        BdApi.alert("Emoji Setting", "Plugin must be restarted for emoji settings to take effect.");
       })
 
       const hideD_l = document.createElement("span")
@@ -603,6 +607,35 @@ module.exports = meta => {
 
       hideD_E.append(hideD_i, hideD_l)
 
+      const hideAT = document.createElement("div")
+      const hideAT_i = document.createElement("input");
+      hideAT_i.type = "checkbox"
+      hideAT_i.style.cursor = "pointer"
+      hideAT_i.style.height = "20px"
+      hideAT_i.style.width = "20px"
+
+      if (settings.hideActivityText == "none") {
+        hideAT_i.checked = true;
+      } else { 
+        hideAT_i.checked = false; 
+      }
+
+      hideAT_i.addEventListener("change", (e) => {
+        if (hideAT_i.checked) settings.hideActivityText = "none"
+        else settings.hideActivityText = "block"
+        BdApi.saveData(meta.name, "settings", settings);
+        BdApi.alert("Status Setting", "Plugin must be restarted for status settings to take effect.");
+      })
+
+      const hideAT_l = document.createElement("span");
+      hideAT_l.innerHTML = `Hide user activity in member list [requires plugin restart]`
+      hideAT_l.style.marginLeft = "10px"
+      hideAT_l.style.color = "white"
+      hideAT_l.style.height = "20px"
+      hideAT_l.style.width = "20px"
+      hideAT_l.style.verticalAlign = "middle"
+
+      hideAT.append(hideAT_i, hideAT_l);
 
       const passwordP = document.createElement("div");
       passwordP.appendChild(titlePs);
@@ -804,7 +837,7 @@ module.exports = meta => {
       iaNotifications.append(showAppNotifications, notiLocation);
 
 
-      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, hideMessageAcc, hideD_E, passwordP, iaNotifications);
+      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, hideMessageAcc, hideD_E, hideAT, passwordP, iaNotifications);
 
       return panel;
     }
