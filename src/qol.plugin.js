@@ -2,7 +2,7 @@
  * @name QOLPlugin
  * @author darthvader1925
  * @description A QOL Plugin with button hiding, lock screen etc.
- * @version 1.2.5
+ * @version 1.2.6
  */
 const { Webpack, Webpack: { Filters } } = BdApi;
 const Dispatcher = Webpack.getModule(Filters.byProps("dispatch", "isDispatching"));
@@ -135,6 +135,7 @@ module.exports = meta => {
   var removed = false;
   const shade = document.createElement("div")
   const password_input = document.createElement("div")
+  const onlineMembers = document.createElement("p")
 
   const defaults = {
     password: "",
@@ -150,6 +151,7 @@ module.exports = meta => {
     hideMessageAccessories: "block",
     hideDisabledEmojis: "block",
     hideActivityText: "block",
+    showMlCount: true,
   };
 
   const settings = {};
@@ -438,11 +440,56 @@ module.exports = meta => {
       function addSpaceInChannelNames() {
         if (settings.replaceHyphenChannel == false) return
         document.querySelectorAll(".channelName-3KPsGw").forEach(channel => {
-          console.log(channel.innerHTML)
           channel.innerHTML = channel.innerHTML.replaceAll("-", " ")
         })
       }
       addSpaceInChannelNames();
+
+
+      setTimeout(() => {
+        if (!settings.showMlCount) return
+        if (document.body.contains(document.querySelector(".members-3WRCEx"))) {
+          onlineMembers.innerHTML = "0 Members"
+          onlineMembers.style.color = "lightgray"
+          onlineMembers.style.fontWeight = "bold"
+          onlineMembers.style.fontSize = "15px"
+          onlineMembers.style.textAlign = "center"
+          document.querySelector(".members-3WRCEx").prepend(onlineMembers)
+
+          document.querySelector(".members-3WRCEx").scrollTo(0, 0);
+
+          setTimeout(() => {
+            var members = 0;
+            var indexs = [];
+            document.querySelectorAll(".member-48YF_l").forEach(member => {
+              if (!indexs.includes(member.getAttribute("index"))) {
+                members++;
+                indexs.push(member.getAttribute("index"))
+              }
+            })
+            document.querySelector(".members-3WRCEx").scrollTo(0, document.querySelector(".members-3WRCEx").scrollHeight / 2);
+            setTimeout(() => {
+              document.querySelectorAll(".member-48YF_l").forEach(member => {
+                if (!indexs.includes(member.getAttribute("index"))) {
+                  members++;
+                  indexs.push(member.getAttribute("index"))
+                }
+              })
+              document.querySelector(".members-3WRCEx").scrollTo(0, document.querySelector(".members-3WRCEx").scrollHeight);
+              setTimeout(() => {
+                document.querySelectorAll(".member-48YF_l").forEach(member => {
+                  if (!indexs.includes(member.getAttribute("index"))) {
+                    members++;
+                    indexs.push(member.getAttribute("index"))
+                  }
+                })
+                document.querySelector(".members-3WRCEx").scrollTo(0, 0);
+                onlineMembers.innerHTML = members + " Members"
+              }, 1000)
+            }, 500)
+          }, 1000)
+        }
+      }, 500)
     },
     getSettingsPanel: () => {
       const panel = document.createElement("div");
@@ -586,8 +633,8 @@ module.exports = meta => {
       hideD_i.style.verticalAlign = "middle"
       if (settings.hideDisabledEmojis == "none") {
         hideD_i.checked = true;
-      } else { 
-        hideD_i.checked = false; 
+      } else {
+        hideD_i.checked = false;
       }
 
       hideD_i.addEventListener("change", (e) => {
@@ -616,8 +663,8 @@ module.exports = meta => {
 
       if (settings.hideActivityText == "none") {
         hideAT_i.checked = true;
-      } else { 
-        hideAT_i.checked = false; 
+      } else {
+        hideAT_i.checked = false;
       }
 
       hideAT_i.addEventListener("change", (e) => {
@@ -751,8 +798,13 @@ module.exports = meta => {
       pswrdt_l.style.width = "20px"
       pswrdt_l.style.verticalAlign = "middle"
 
+      const lockCommand = document.createElement("p")
+      lockCommand.innerHTML = "Lock: Ctrl + L"
+      lockCommand.style.color = "white"
+      lockCommand.style.verticalAlign = "middle"
+
       passwordP.append(pswrd_input, pswrd_il)
-      passwordP.append(lineBreak1, password_timeout, pswrdt_l)
+      passwordP.append(lineBreak1, password_timeout, pswrdt_l, lockCommand)
 
       const iaNotifications = document.createElement("div")
       iaNotifications.innerHTML =
@@ -836,8 +888,35 @@ module.exports = meta => {
 
       iaNotifications.append(showAppNotifications, notiLocation);
 
+      const memberListCount = document.createElement("div")
+      memberListCount.innerHTML = `
+      <br>
+      <h2 style="color: white"><b>Member lists</b></h2>
+      `
+      const mlc_i = document.createElement("input")
+      mlc_i.type = "checkbox";
+      mlc_i.checked = settings.showMlCount;
+      mlc_i.style.cursor = "pointer"
+      mlc_i.style.height = "20px"
+      mlc_i.style.width = "20px"
+      mlc_i.style.verticalAlign = "middle"
 
-      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, hideMessageAcc, hideD_E, hideAT, passwordP, iaNotifications);
+      mlc_i.addEventListener("change", (e) => {
+        settings.showMlCount = mlc_i.checked
+        BdApi.saveData(meta.name, "settings", settings);
+      })
+
+      const mlc_l = document.createElement("span")
+      mlc_l.innerHTML = "Show total member count on member list"
+      mlc_l.style.marginLeft = "10px"
+      mlc_l.style.color = "white"
+      mlc_l.style.height = "20px"
+      mlc_l.style.width = "20px"
+      mlc_l.style.verticalAlign = "middle"
+
+      memberListCount.append(mlc_i, mlc_l)
+
+      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, hideMessageAcc, hideD_E, hideAT, passwordP, iaNotifications, memberListCount);
 
       return panel;
     }
