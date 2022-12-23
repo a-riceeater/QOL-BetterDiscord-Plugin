@@ -548,7 +548,11 @@ module.exports = meta => {
       hma_i.style.height = "20px"
       hma_i.style.width = "20px"
       hma_i.style.verticalAlign = "middle"
-      hma_i.checked = settings.hideMessageAccessories;
+      if (settings.hideMessageAccessories == "block") {
+        hma_i.checked = false;
+      } else {
+        hma_i.checked = true;
+      }
       hma_i.addEventListener("change", (e) => {
         if (hma_i.checked) {
           settings.hideMessageAccessories = "none"
