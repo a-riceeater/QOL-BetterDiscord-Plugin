@@ -31,19 +31,19 @@ const listener = (action) => {
     if (author == clientUsername) return;
     const profilePicture = "https://cdn.discordapp.com/avatars/" + action.message.author.id + "/" + action.message.author.avatar + ".webp";
     const notification = document.createElement("div")
-    if (action.message.content.length > 28) {
+    if (action.message.content.length > 32) {
       if (action.message.guild_id == undefined || action.message.guild_id == null) {
         notification.innerHTML = `
         <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span>
         <br><br>
-        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
+        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 35)}...</span>
         <br><br>
         `
       } else {
         notification.innerHTML = `
         <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span> | <span id="bd-notification-channel" style="vertical-align: middle; margin-top: 10px; font-size: 17px;">#${action.message.channel_id}</span>
         <br><br>
-        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
+        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 35)}...</span>
         <br><br>
         `
       }
