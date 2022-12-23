@@ -8,5 +8,7 @@
     <li>Lock screen and auto-lock</li>
     <li>In-app notifications</li>
     <li>Hide message accessories (Images, files, embeds, Spotify embeds, etc)
+    <li>Hide disabled emojis</li>
+    <li>Hide user activity in members list</li>
     <li>More features coming soon</li>
 </ul>
