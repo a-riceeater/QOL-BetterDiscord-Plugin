@@ -7,5 +7,6 @@
     <li>Icon Hiding (channel #'s, message bar icons, etc)</li>
     <li>Lock screen and auto-lock</li>
     <li>In-app notifications</li>
+    <li>Hide message accessories (Images, files, embeds, Spotify embeds, etc)
     <li>More features coming soon</li>
 </ul>
