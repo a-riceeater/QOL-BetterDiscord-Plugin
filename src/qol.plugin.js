@@ -31,19 +31,19 @@ const listener = (action) => {
     if (author == clientUsername) return;
     const profilePicture = "https://cdn.discordapp.com/avatars/" + action.message.author.id + "/" + action.message.author.avatar + ".webp";
     const notification = document.createElement("div")
-    if (action.message.content.length > 32) {
+    if (action.message.content.length > 28) {
       if (action.message.guild_id == undefined || action.message.guild_id == null) {
         notification.innerHTML = `
         <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span>
         <br><br>
-        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 35)}...</span>
+        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
         <br><br>
         `
       } else {
         notification.innerHTML = `
         <img src="${profilePicture}" class="bd-notification-pfp" style="width: 40px; height: 40px; vertical-align: middle; margin-left: 10px; margin-top: 10px;"> <span class="bd-notification-username" style="vertical-align: middle; margin-left: 15px; margin-top: 10px; font-size: 17px;">${author.substring(0, 7)}</span> | <span id="bd-notification-channel" style="vertical-align: middle; margin-top: 10px; font-size: 17px;">#${action.message.channel_id}</span>
         <br><br>
-        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 35)}...</span>
+        <span class="bd-notification-content" style="margin-left: 15px">${action.message.content.substring(0, 25)}...</span>
         <br><br>
         `
       }
@@ -149,7 +149,8 @@ module.exports = meta => {
     useOnlyPush: true,
     showPush: true,
     notiLocation: "Top Left",
-    hideMessageAccessories: false,
+    hideMessageAccessories: "block",
+    hideDisabledEmojis: "block",
   };
 
   const settings = {};
@@ -322,6 +323,10 @@ module.exports = meta => {
 
     .container-2sjPya {
       display: ${settings.hideMessageAccessories};
+    }
+
+    .emojiItemDisabled-3VVnwp {
+      display: ${settings.hideDisabledEmojis};
     }
   `);
 
@@ -554,11 +559,8 @@ module.exports = meta => {
         hma_i.checked = true;
       }
       hma_i.addEventListener("change", (e) => {
-        if (hma_i.checked) {
-          settings.hideMessageAccessories = "none"
-        } else {
-          settings.hideMessageAccessories = "block"
-        }
+        if (hma_i.checked) settings.hideMessageAccessories = "none"
+        else settings.hideMessageAccessories = "block"
         BdApi.saveData(meta.name, "settings", settings);
       })
 
@@ -571,6 +573,35 @@ module.exports = meta => {
       hma_l.style.verticalAlign = "middle"
 
       hideMessageAcc.append(hma_i, hma_l)
+
+      const hideD_E = document.createElement("div")
+      const hideD_i = document.createElement("input")
+      hideD_i.type = "checkbox"
+      hideD_i.style.cursor = "pointer"
+      hideD_i.style.height = "20px"
+      hideD_i.style.width = "20px"
+      hideD_i.style.verticalAlign = "middle"
+      if (settings.hideDisabledEmojis == "none") {
+        hideD_i.checked = true;
+      } else { 
+        hideD_i.checked = false; 
+      }
+
+      hideD_i.addEventListener("change", (e) => {
+        if (hideD_i.checked) settings.hideDisabledEmojis = "none"
+        else settings.hideDisabledEmojis = "block"
+        BdApi.saveData(meta.name, "settings", settings);
+      })
+
+      const hideD_l = document.createElement("span")
+      hideD_l.innerHTML = `Hide disabled emojis [requires plugin restart]`
+      hideD_l.style.marginLeft = "10px"
+      hideD_l.style.color = "white"
+      hideD_l.style.height = "20px"
+      hideD_l.style.width = "20px"
+      hideD_l.style.verticalAlign = "middle"
+
+      hideD_E.append(hideD_i, hideD_l)
 
 
       const passwordP = document.createElement("div");
@@ -761,7 +792,7 @@ module.exports = meta => {
       }
 
       const notiLocation_i = document.createElement("span");
-      notiLocation_i.innerHTML = "Notification location"
+      notiLocation_i.innerHTML = "Notification location [this value will not automatically set to current setting]"
       notiLocation_i.style.marginLeft = "10px"
       notiLocation_i.style.color = "white"
       notiLocation_i.style.height = "20px"
@@ -773,7 +804,7 @@ module.exports = meta => {
       iaNotifications.append(showAppNotifications, notiLocation);
 
 
-      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, hideMessageAcc, passwordP, iaNotifications);
+      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, hideMessageAcc, hideD_E, passwordP, iaNotifications);
 
       return panel;
     }
