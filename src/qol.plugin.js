@@ -149,6 +149,7 @@ module.exports = meta => {
     useOnlyPush: true,
     showPush: true,
     notiLocation: "Top Left",
+    hideMessageAccessories: false,
   };
 
   const settings = {};
@@ -158,7 +159,7 @@ module.exports = meta => {
   console.log("QOL PLUGIN SETTINGS:")
   console.log(settings);
   showPush = settings.showPush;
-  notiLocation = settings.notiLocation;
+  nl = settings.notiLocation;
 
   function isNumeric(str) {
     if (typeof str != "string") return false
@@ -313,6 +314,14 @@ module.exports = meta => {
       width: 100%;
       background: #195ea8;
       height: 10px;
+    }
+
+    .gridContainer-1cF_Ic {
+      display: ${settings.hideMessageAccessories};
+    }
+
+    .container-2sjPya {
+      display: ${settings.hideMessageAccessories};
     }
   `);
 
@@ -531,6 +540,35 @@ module.exports = meta => {
       titlePs.style.marginBottom = "10px"
       titlePs.style.marginTop = "10px";
 
+      const hideMessageAcc = document.createElement("div")
+
+      const hma_i = document.createElement("input")
+      hma_i.type = "checkbox"
+      hma_i.style.cursor = "pointer"
+      hma_i.style.height = "20px"
+      hma_i.style.width = "20px"
+      hma_i.style.verticalAlign = "middle"
+      hma_i.checked = settings.hideMessageAccessories;
+      hma_i.addEventListener("change", (e) => {
+        if (hma_i.checked) {
+          settings.hideMessageAccessories = "none"
+        } else {
+          settings.hideMessageAccessories = "block"
+        }
+        BdApi.saveData(meta.name, "settings", settings);
+      })
+
+      const hma_l = document.createElement("span")
+      hma_l.innerHTML = `Hide message accessories (embeds, etc) [requires plugin restart]`
+      hma_l.style.marginLeft = "10px"
+      hma_l.style.color = "white"
+      hma_l.style.height = "20px"
+      hma_l.style.width = "20px"
+      hma_l.style.verticalAlign = "middle"
+
+      hideMessageAcc.append(hma_i, hma_l)
+
+
       const passwordP = document.createElement("div");
       passwordP.appendChild(titlePs);
 
@@ -725,12 +763,13 @@ module.exports = meta => {
       notiLocation_i.style.height = "20px"
       notiLocation_i.style.width = "20px"
       notiLocation_i.style.verticalAlign = "middle"
-      
+
       notiLocation.append(select, notiLocation_i);
 
       iaNotifications.append(showAppNotifications, notiLocation);
 
-      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP, iaNotifications);
+
+      panel.append(showChannelIcons, showMessageIcons, replaceHypenC, hideMessageAcc, passwordP, iaNotifications);
 
       return panel;
     }
