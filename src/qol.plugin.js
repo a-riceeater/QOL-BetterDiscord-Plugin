@@ -10,15 +10,15 @@ const UserStore = Webpack.getModule(m => m?._dispatchToken && m?.getName() === "
 const clientUsername = UserStore.getCurrentUser().username;
 const clientId = UserStore.getCurrentUser().id;
 var showPush = false;
-var useOnlyPush = true;
+var nl = "Top Left";
 console.log("client id " + clientId)
 
 const listener = (action) => {
   console.log(action)
   if (!showPush) return
   //if (!action.isPushNotification) {
-    //if (useOnlyPush) return
- // }
+  //if (useOnlyPush) return
+  // }
   if (action.message.state == "SENDING") return
   if (action.message.content == null || action.message.content == "") return
 
@@ -95,6 +95,20 @@ const listener = (action) => {
       notification.style.background = "#49443C"
     }
 
+    if (nl == "Top Left") {
+      notification.style.left = "1%"
+      notification.style.top = "1%"
+    } else if (nl == "Top Right") {
+      notification.style.right = "1%"
+      notification.style.top = "1%"
+    } else if (nl == "Bottom Left") {
+      notification.style.left = "1%"
+      notification.style.bottom = "1%"
+    } else if (nl == "Bottom Right") {
+      notification.style.right = "1%"
+      notification.style.bottom = "1%"
+    }
+
     document.body.append(notification)
 
     setTimeout(() => {
@@ -134,6 +148,7 @@ module.exports = meta => {
     replaceHyphenChannel: false,
     useOnlyPush: true,
     showPush: true,
+    notiLocation: "Top Left",
   };
 
   const settings = {};
@@ -143,7 +158,7 @@ module.exports = meta => {
   console.log("QOL PLUGIN SETTINGS:")
   console.log(settings);
   showPush = settings.showPush;
-  useOnlyPush = settings.useOnlyPush;
+  notiLocation = settings.notiLocation;
 
   function isNumeric(str) {
     if (typeof str != "string") return false
@@ -281,8 +296,6 @@ module.exports = meta => {
     .bd-qol-notification {
       position: fixed;
       z-index: 9997;
-      left: 1%;
-      top: 1%;
       width: 350px;
       background: #36393F;
       color: white;
@@ -636,8 +649,8 @@ module.exports = meta => {
       passwordP.append(lineBreak1, password_timeout, pswrdt_l)
 
       const iaNotifications = document.createElement("div")
-      iaNotifications.innerHTML = 
-      `
+      iaNotifications.innerHTML =
+        `
       <br>
       <h1 style="color: white;"><b>In-app Notifications</b></h1>
       <br>
@@ -664,32 +677,59 @@ module.exports = meta => {
       san_l.style.width = "20px"
       san_l.style.verticalAlign = "middle"
       showAppNotifications.append(san_i, san_l);
-/*
-      const uop = document.createElement("div")
-      const useOnlyPush_i = document.createElement("input")
-      useOnlyPush_i.type = "checkbox";
-      useOnlyPush_i.checked = settings.useOnlyPush;
-      useOnlyPush_i.style.cursor = "pointer"
-      useOnlyPush_i.style.height = "20px"
-      useOnlyPush_i.style.width = "20px"
-      useOnlyPush_i.style.verticalAlign = "middle"
-      useOnlyPush_i.addEventListener("change", (e) => {
-        settings.useOnlyPush = useOnlyPush_i.checked;
+      /*
+            const uop = document.createElement("div")
+            const useOnlyPush_i = document.createElement("input")
+            useOnlyPush_i.type = "checkbox";
+            useOnlyPush_i.checked = settings.useOnlyPush;
+            useOnlyPush_i.style.cursor = "pointer"
+            useOnlyPush_i.style.height = "20px"
+            useOnlyPush_i.style.width = "20px"
+            useOnlyPush_i.style.verticalAlign = "middle"
+            useOnlyPush_i.addEventListener("change", (e) => {
+              settings.useOnlyPush = useOnlyPush_i.checked;
+              BdApi.saveData(meta.name, "settings", settings);
+              useOnlyPush = useOnlyPush_i.checked;
+            })
+      
+            const useOnlyPush_l = document.createElement("span")
+            useOnlyPush_l.innerHTML = "Only show important notifications (when mentioned, etc)"
+            useOnlyPush_l.style.marginLeft = "10px"
+            useOnlyPush_l.style.color = "white"
+            useOnlyPush_l.style.height = "20px"
+            useOnlyPush_l.style.width = "20px"
+            useOnlyPush_l.style.verticalAlign = "middle"
+      
+            uop.append(useOnlyPush_i, useOnlyPush_l)*/
+
+      const notiLocation = document.createElement("div")
+      const select = document.createElement("select")
+      select.innerHTML = `
+      <option value="topLeft">Top Left</option>
+      <option value="topRight">Top Right</option>
+      <option value="bottomLeft">Bottom Left</option>
+      <option value="bottomRight">Bottom Right</option>
+      `
+      select.onchange = function () {
+        var index = this.selectedIndex;
+        var inputText = this.children[index].innerHTML.trim();
+        settings.notiLocation = inputText;
+        nl = inputText;
         BdApi.saveData(meta.name, "settings", settings);
-        useOnlyPush = useOnlyPush_i.checked;
-      })
+      }
 
-      const useOnlyPush_l = document.createElement("span")
-      useOnlyPush_l.innerHTML = "Only show important notifications (when mentioned, etc)"
-      useOnlyPush_l.style.marginLeft = "10px"
-      useOnlyPush_l.style.color = "white"
-      useOnlyPush_l.style.height = "20px"
-      useOnlyPush_l.style.width = "20px"
-      useOnlyPush_l.style.verticalAlign = "middle"
+      const notiLocation_i = document.createElement("span");
+      notiLocation_i.innerHTML = "Notification location"
+      notiLocation_i.style.marginLeft = "10px"
+      notiLocation_i.style.color = "white"
+      notiLocation_i.style.height = "20px"
+      notiLocation_i.style.width = "20px"
+      notiLocation_i.style.verticalAlign = "middle"
+      
+      notiLocation.append(select, notiLocation_i);
 
-      uop.append(useOnlyPush_i, useOnlyPush_l)*/
-      iaNotifications.append(showAppNotifications)
-    
+      iaNotifications.append(showAppNotifications, notiLocation);
+
       panel.append(showChannelIcons, showMessageIcons, replaceHypenC, passwordP, iaNotifications);
 
       return panel;
