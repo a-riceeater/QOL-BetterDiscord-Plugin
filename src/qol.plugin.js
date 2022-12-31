@@ -1,7 +1,7 @@
 /**
  * @name QOLPlugin
  * @author darthvader1925
- * @description A QOL Plugin with button hiding, lock screen etc.
+ * @description A QOL Plugin with button hiding, lock screen, in-app notifications etc.
  * @version 1.2.6
  */
 const { Webpack, Webpack: { Filters } } = BdApi;
