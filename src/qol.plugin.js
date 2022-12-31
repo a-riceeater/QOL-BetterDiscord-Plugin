@@ -420,10 +420,6 @@ module.exports = meta => {
       //document.removeEventListener("mousemove", mo)
     },
     onSwitch: () => {
-      //setTimeout(function() {
-      //observer.disconnect()
-      //observer.observe(document.querySelector(".scrollerInner-2PPAp2"), config);
-      //}, 1000)
       function hideIcons() {
         if (settings.hideMsgIcons == false) return
         document.querySelectorAll(".buttonWrapper-3YFQGJ").forEach(button => {
